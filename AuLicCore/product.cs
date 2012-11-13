@@ -5,7 +5,7 @@ using System.Text;
 
 namespace AuLicCore
 {
-    public class User
+    public class Product
     {
         public string Name
         {
