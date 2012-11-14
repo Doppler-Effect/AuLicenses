@@ -25,6 +25,9 @@ namespace AuLicCore
         int maxusers, currentusers;
         string name, id;
 
+        public Product(string str)
+        {
 
+        }
     }
 }

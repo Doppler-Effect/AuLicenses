@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
 
 namespace AuLicCore
 {
@@ -22,9 +23,18 @@ namespace AuLicCore
             this.name = name;
         }
 
-        List<Product> findActiveProducts()
+        public List<Product> findActiveProducts()
         {
+            List<Product> result = new List<Product>();
 
+            FileStream stream = new FileStream(this.path, FileMode.Open);
+            StreamReader file = new StreamReader(stream);
+            while (!file.EndOfStream)
+            {
+                string row = file.ReadLine();
+                
+            }
         }
+        
     }
 }
