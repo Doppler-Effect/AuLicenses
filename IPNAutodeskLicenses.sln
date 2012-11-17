@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 2010
+# Visual C# Express 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuLicMonitor", "AuLicMonitor\AuLicMonitor.csproj", "{AC7EB196-DCA1-4CA6-8A66-750D173AAE45}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AuLicCore", "AuLicCore\AuLicCore.csproj", "{0508D6C7-1333-4449-AA80-C121A8AB0520}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "testLicProj", "testLicProj\testLicProj.csproj", "{EAC945A4-F8F4-44BF-99BE-5E06FB3BC8A8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -35,6 +37,16 @@ Global
 		{0508D6C7-1333-4449-AA80-C121A8AB0520}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{0508D6C7-1333-4449-AA80-C121A8AB0520}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{0508D6C7-1333-4449-AA80-C121A8AB0520}.Release|x86.ActiveCfg = Release|Any CPU
+		{EAC945A4-F8F4-44BF-99BE-5E06FB3BC8A8}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{EAC945A4-F8F4-44BF-99BE-5E06FB3BC8A8}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{EAC945A4-F8F4-44BF-99BE-5E06FB3BC8A8}.Debug|Mixed Platforms.Build.0 = Debug|x86
+		{EAC945A4-F8F4-44BF-99BE-5E06FB3BC8A8}.Debug|x86.ActiveCfg = Debug|x86
+		{EAC945A4-F8F4-44BF-99BE-5E06FB3BC8A8}.Debug|x86.Build.0 = Debug|x86
+		{EAC945A4-F8F4-44BF-99BE-5E06FB3BC8A8}.Release|Any CPU.ActiveCfg = Release|x86
+		{EAC945A4-F8F4-44BF-99BE-5E06FB3BC8A8}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{EAC945A4-F8F4-44BF-99BE-5E06FB3BC8A8}.Release|Mixed Platforms.Build.0 = Release|x86
+		{EAC945A4-F8F4-44BF-99BE-5E06FB3BC8A8}.Release|x86.ActiveCfg = Release|x86
+		{EAC945A4-F8F4-44BF-99BE-5E06FB3BC8A8}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
