@@ -8,6 +8,38 @@ namespace AuLicCore
 {
     public class licFile
     {
+        #region STATIC FIELDS
+
+        public static int getNumberAfterPosition(int pos, string row)
+        {
+            if (pos != -1)
+            {
+                int result;
+                string str = "";
+
+                while (!char.IsNumber(row, pos))
+                {
+                    pos += 1;
+                }
+                do
+                {
+                    str += row[pos];
+                    pos += 1;
+                } while (char.IsNumber(row, pos));
+
+                str = str.Trim();
+
+                if (int.TryParse(str, out result))
+                    return result;
+                else
+                    return 0;
+            }
+            else
+                return 0;
+        }
+
+        #endregion
+
         public string Name
         {
             get
@@ -17,69 +49,77 @@ namespace AuLicCore
         }
         string name, path;
         bool fileOK = false;
+        List<Product> products = new List<Product>();
+        public List<Product> Products
+        {
+            get
+            {
+                return products;
+            }
+        }
 
         public licFile(string name, string path)
         {
-            this.path = "D:\\Dropbox\\work\\status_venera.txt";
+            this.path = path;
             this.name = name;
-            fileOK = true;
+            fileOK = true;  //тут будет добавлена логика проверки наличия файла
         }
 
-        public List<Product> findActiveProducts()
+        public void findActiveProducts()
         {
+            products.Clear();
             if (fileOK)
             {
-                List<Product> result = new List<Product>();
-
-                FileStream stream = new FileStream(this.path, FileMode.Open);
+                FileStream stream = new FileStream(this.path, FileMode.Open, FileAccess.Read);
                 StreamReader file = new StreamReader(stream);
                 while (!file.EndOfStream)
                 {
                     string row = file.ReadLine();
-                    if (row.Contains("Users of") && this.isProductActive(row))
+                    if (row.Contains("Users of") && this.ProductActive(row))
                     {
-                        result.Add(new Product(row));
+                        products.Add(new Product(row, this));
                     }
                 }
-                stream.Close();
-                return result;
+                stream.Dispose();
             }
-            else
-                return null;
         }
 
-        bool isProductActive(string row)
+        bool ProductActive(string row)
         {
-            int pos = row.LastIndexOf("Total of");
-            int licCount = getNumberFromPosition(pos, row);
+            int licCount = getNumberAfterPosition(row.LastIndexOf("Total of"), row);
             if (licCount > 0)
                 return true;
             else
                 return false;
         }
-
-        public static int getNumberFromPosition(int pos, string row)
+        
+        public List<user> getUserNames(string startRow)
         {
-            int result;
-            string str = "";
-
-            while (!char.IsNumber(row, pos))
+            List<user> result = new List<user>();
+            if (fileOK)
             {
-                pos += 1;
+                FileStream stream = new FileStream(this.path, FileMode.Open, FileAccess.Read);
+                StreamReader file = new StreamReader(stream);
+                string row = null;
+                while (!file.EndOfStream && row != startRow)
+                {
+                    row = file.ReadLine();
+                }
+                do
+                {
+                    row = file.ReadLine();
+                    if (row.Contains("start"))
+                        result.Add(new user(getUserNameFromString(row)));                    
+                } while (!file.EndOfStream && !row.Contains("Users of"));
+                stream.Dispose();
             }
-            do
-            {
-                str += row[pos];
-                pos += 1;
-            } while (char.IsNumber(row, pos)) ;
-
-            str = str.Trim();
-
-            if(int.TryParse(str, out result))
-                return result;
-            else
-                return 0;
+            return result;
         }
 
+        string getUserNameFromString(string row)
+        {
+            string[] tokens = row.Trim().Split(' ');
+            return tokens[0];
+        }
     }
 }

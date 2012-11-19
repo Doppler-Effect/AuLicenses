@@ -11,7 +11,7 @@ namespace testLicProj
     {
         static void Main(string[] args)
         {
-            licFile file = new licFile("File1", "foo");
+            licFile file = new licFile("File1", "D:\\Dropbox\\work\\status_venera.txt");
             file.findActiveProducts();
         }
     }
