@@ -63,9 +63,10 @@ namespace AuLicCore
             this.path = path;
             this.name = name;
             fileOK = true;  //тут будет добавлена логика проверки наличия файла
+            findActiveProducts();
         }
 
-        public void findActiveProducts()
+        void findActiveProducts()
         {
             products.Clear();
             if (fileOK)
@@ -86,9 +87,14 @@ namespace AuLicCore
 
         bool ProductActive(string row)
         {
-            int licCount = getNumberAfterPosition(row.LastIndexOf("Total of"), row);
-            if (licCount > 0)
-                return true;
+            if (row.Contains("Total of"))
+            {
+                int licCount = getNumberAfterPosition(row.LastIndexOf("Total of"), row);
+                if (licCount > 0)
+                    return true;
+                else
+                    return false;
+            }
             else
                 return false;
         }
