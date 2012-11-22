@@ -21,8 +21,22 @@ namespace AuLicCore
                 return id;
             }
         }
+        public int maxUsers
+        {
+            get
+            {
+                return this.maxusers;
+            }
+        }
+        public int currUsers
+        {
+            get
+            {
+                return this.users.Count;
+            }
+        }
 
-        int maxusers, currentusers;
+        int maxusers;
         string name, id;
 
         List<user> users;
@@ -40,8 +54,6 @@ namespace AuLicCore
             this.id = row.Trim().Split(' ')[2].Trim(':');
             int pos = row.IndexOf("Total of");
             this.maxusers = licFile.getNumberAfterPosition(pos, row);
-            pos = row.LastIndexOf("Total of");
-            this.currentusers = licFile.getNumberAfterPosition(pos, row);
             this.users = parentFile.getUserNames(row);
         }        
     }
