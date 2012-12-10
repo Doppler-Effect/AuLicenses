@@ -15,7 +15,7 @@ namespace AuLicCore
             if (pos != -1)
             {
                 int result;
-                string str = "";
+                string str = null;
 
                 while (!char.IsNumber(row, pos))
                 {
@@ -62,27 +62,24 @@ namespace AuLicCore
         {
             this.path = path;
             this.name = name;
-            fileOK = true;  //тут будет добавлена логика проверки наличия файла
             findActiveProducts();
         }
 
         void findActiveProducts()
         {
             products.Clear();
-            if (fileOK)
+            FileStream stream = new FileStream(this.path, FileMode.Open, FileAccess.Read);
+            StreamReader file = new StreamReader(stream);
+            while (!file.EndOfStream)
             {
-                FileStream stream = new FileStream(this.path, FileMode.Open, FileAccess.Read);
-                StreamReader file = new StreamReader(stream);
-                while (!file.EndOfStream)
+                string row = file.ReadLine();
+                if (row.Contains("Users of") && this.ProductActive(row))
                 {
-                    string row = file.ReadLine();
-                    if (row.Contains("Users of") && this.ProductActive(row))
-                    {
-                        products.Add(new Product(row, this));
-                    }
+                    this.fileOK = true;
+                    products.Add(new Product(row, this));
                 }
-                stream.Dispose();
             }
+            stream.Dispose();
         }
 
         bool ProductActive(string row)

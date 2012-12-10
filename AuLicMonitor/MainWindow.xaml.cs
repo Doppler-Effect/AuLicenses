@@ -20,28 +20,74 @@ namespace AuLicMonitor
     /// </summary>
     public partial class MainWindow : Window
     {
+        private Dictionary<string, string> fileNames = new Dictionary<string, string>();
+
         public MainWindow()
         {
             InitializeComponent();
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        private void addLicFileToTree(string filename)
         {
-            licFile file = new licFile("venera", "D:\\Dropbox\\work\\status_venera.txt");
+            string[] pathTokens = filename.Split('\\');
+            string rootName = pathTokens.Last();
+            licFile file = new licFile(rootName, filename);
+            TreeViewItem RootItem = new TreeViewItem();
+            RootItem.Header = file.Name;
+            RootItem.IsExpanded = true;
             foreach (Product p in file.Products)
             {
-                TreeViewItem item = new TreeViewItem();
-                item.Name = p.ID;
-                item.Items.Add(p.maxUsers);
-                TreeViewItem usersItem = new TreeViewItem();
-                usersItem.Name = p.currUsers + " users";
+                TreeViewItem product = new TreeViewItem();
+                product.Header = p.ID + ": " + p.currUsers + " of " + p.maxUsers + " users.";
+                product.IsExpanded = false;
                 foreach (user u in p.Users)
                 {
-                    usersItem.Items.Add(u.Name);
+                    product.Items.Add(u.Name);
                 }
-                item.Items.Add(usersItem);
-                treeView.Items.Add(item);
+                RootItem.Items.Add(product);
             }
+            treeView.Items.Add(RootItem);
+            fileNames.Add(rootName, filename);
+        }
+
+        private string getLicFilePath()
+        {
+            string filename = null;
+            Microsoft.Win32.OpenFileDialog dlg = new Microsoft.Win32.OpenFileDialog();
+            dlg.Filter = "txt Files|*.txt";
+            dlg.InitialDirectory = Microsoft.Win32.FileDialogCustomPlaces.Desktop.Path;
+            dlg.Multiselect = false;
+            if (dlg.ShowDialog() == true)
+            {
+                filename = dlg.FileName;
+            }
+            return filename;
+        }
+
+        private void buttonAdd_Click(object sender, RoutedEventArgs e)
+        {
+            string filename = getLicFilePath();
+            if (filename != null)
+            {
+                addLicFileToTree(filename);
+            }
+        }
+
+        private void buttonRemove_Click(object sender, RoutedEventArgs e)
+        {
+            object item = treeView.SelectedItem;
+            if (item != null)
+            {
+                treeView.Items.Remove(item);
+                string headerText = ((TreeViewItem)item).Header.ToString();
+                if (fileNames.ContainsKey(headerText))
+                    fileNames.Remove(headerText);
+            }
+        }
+
+        private void Window_Loaded(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }
