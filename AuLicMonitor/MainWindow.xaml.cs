@@ -20,11 +20,16 @@ namespace AuLicMonitor
     /// </summary>
     public partial class MainWindow : Window
     {
-        private Dictionary<string, string> fileNames = new Dictionary<string, string>();
+        SerializableFilenamesSaver fileNames;
 
         public MainWindow()
         {
             InitializeComponent();
+            fileNames = new SerializableFilenamesSaver();
+            foreach (string s in fileNames.Members)
+            {
+                addLicFileToTree(s);
+            }
         }
 
         private void addLicFileToTree(string filename)
@@ -47,7 +52,7 @@ namespace AuLicMonitor
                 RootItem.Items.Add(product);
             }
             treeView.Items.Add(RootItem);
-            fileNames.Add(rootName, filename);
+            fileNames.Add(filename);
         }
 
         private string getLicFilePath()
@@ -80,8 +85,7 @@ namespace AuLicMonitor
             {
                 treeView.Items.Remove(item);
                 string headerText = ((TreeViewItem)item).Header.ToString();
-                if (fileNames.ContainsKey(headerText))
-                    fileNames.Remove(headerText);
+                fileNames.Remove(headerText);
             }
         }
 
