@@ -28,29 +28,43 @@ namespace AuLicMonitor
             fileNames = new SerializableFilenamesSaver();
             foreach (string s in fileNames.Members)
             {
-                addLicFileToTree(s);
+                bool fileExists = false;
+                if (System.IO.File.Exists(s))
+                    fileExists = true;
+                addLicFileToTree(s, fileExists);
             }
         }
 
-        private void addLicFileToTree(string filename)
+        private void addLicFileToTree(string filename, bool fileExists = true)
         {
-            string[] pathTokens = filename.Split('\\');
-            string rootName = pathTokens.Last();
-            licFile file = new licFile(rootName, filename);
             TreeViewItem RootItem = new TreeViewItem();
-            RootItem.Header = file.Name;
             RootItem.IsExpanded = true;
-            foreach (Product p in file.Products)
+            RootItem.Tag = filename;
+            string rootItemName = filename.Split('\\').Last();
+            RootItem.Header = rootItemName;
+
+            if (fileExists)
             {
-                TreeViewItem product = new TreeViewItem();
-                product.Header = p.ID + ": " + p.currUsers + " of " + p.maxUsers + " users.";
-                product.IsExpanded = false;
-                foreach (user u in p.Users)
+                licFile file = new licFile(rootItemName, filename);
+                foreach (Product p in file.Products)
                 {
-                    product.Items.Add(u.Name);
+                    TreeViewItem product = new TreeViewItem();
+                    product.Header = p.ID + ": " + p.currUsers + " of " + p.maxUsers + " users.";
+                    product.IsExpanded = false;
+                    foreach (user u in p.Users)
+                    {
+                        product.Items.Add(u.Name);
+                    }
+                    RootItem.Items.Add(product);
                 }
-                RootItem.Items.Add(product);
             }
+            else
+            {
+                TreeViewItem notFoundReport = new TreeViewItem();
+                notFoundReport.Header = "Файл не найден";
+                RootItem.Items.Add(notFoundReport);
+            }
+
             treeView.Items.Add(RootItem);
             fileNames.Add(filename);
         }
@@ -80,12 +94,12 @@ namespace AuLicMonitor
 
         private void buttonRemove_Click(object sender, RoutedEventArgs e)
         {
-            object item = treeView.SelectedItem;
+            TreeViewItem item = treeView.SelectedItem as TreeViewItem;
             if (item != null)
             {
                 treeView.Items.Remove(item);
-                string headerText = ((TreeViewItem)item).Header.ToString();
-                fileNames.Remove(headerText);
+                string fileName = item.Tag.ToString();
+                fileNames.Remove(fileName);
             }
         }
 

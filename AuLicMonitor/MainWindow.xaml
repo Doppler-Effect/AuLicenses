@@ -1,10 +1,10 @@
 ﻿<Window x:Class="AuLicMonitor.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="MainWindow" Height="407" Width="466" Loaded="Window_Loaded">
-    <Grid>
-        <TreeView Height="346" HorizontalAlignment="Left" Margin="12,12,0,0" Name="treeView" VerticalAlignment="Top" Width="345" />
-        <Button Content="Add licfile" Height="23" HorizontalAlignment="Left" Margin="363,12,0,0" Name="buttonAdd" VerticalAlignment="Top" Width="75" Click="buttonAdd_Click" />
-        <Button Content="Remove" HorizontalAlignment="Left" Margin="363,41,0,0" Name="buttonRemove" Width="75" Height="23" VerticalAlignment="Top" Click="buttonRemove_Click" />
+        Title="Autodesk license viewer by IPN Company " Height="500" Width="457" Loaded="Window_Loaded" WindowStartupLocation="CenterScreen" MaxWidth="457" MinWidth="457" MinHeight="500" Icon="flood_it.png">
+    <Grid Margin="0,10,0,-20">
+        <TreeView Margin="10,10,92,30" Name="treeView" VerticalContentAlignment="Stretch" />
+        <Button Content="Add .lic file" Height="23" Margin="0,10,10,0" Name="buttonAdd" VerticalAlignment="Top" Click="buttonAdd_Click" HorizontalAlignment="Right" Width="77" />
+        <Button Content="Remove" Margin="0,41,10,0" Name="buttonRemove" Click="buttonRemove_Click" HorizontalAlignment="Right" Width="77" Height="23" VerticalAlignment="Top" />
     </Grid>
 </Window>

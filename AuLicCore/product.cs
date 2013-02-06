@@ -48,12 +48,14 @@ namespace AuLicCore
             }
         }
 
-        public Product(string row, licFile parentFile)
+        List<Product> children;
+
+
+        public Product(ProductTextRow row, licFile parentFile)
         //Users of 64300ACD_F:  (Total of 23 licenses issued;  Total of 19 licenses in use)
         {
-            this.id = row.Trim().Split(' ')[2].Trim(':');
-            int pos = row.IndexOf("Total of");
-            this.maxusers = licFile.getNumberAfterPosition(pos, row);
+            this.id = row.ProductID;
+            this.maxusers = row.MaxUsers;
             this.users = parentFile.getUserNames(row);
         }        
     }

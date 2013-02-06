@@ -11,7 +11,7 @@ namespace testLicProj
     {
         static void Main(string[] args)
         {
-            licFile file = new licFile("File1", "D:\\Dropbox\\work\\status_venera.txt");
+            licFile file = new licFile("File1", "D:\\Documents\\Dropbox\\work\\status_venera.txt");
             foreach (Product pr in file.Products)
             {
                 Console.WriteLine("Пользователи продукта {0}", pr.ID);
