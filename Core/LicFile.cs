@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.IO;
 
-namespace AuLicCore
+namespace Core
 {
-    public class licFile
+    public class LicFile
     {
         public string Name
         {
@@ -26,7 +26,7 @@ namespace AuLicCore
             }
         }
 
-        public licFile(string name, string path)
+        public LicFile(string name, string path)
         {
             this.path = path;
             this.name = name;
@@ -54,9 +54,9 @@ namespace AuLicCore
             stream.Dispose();
         }        
         
-        public List<user> getUserNames(ProductTextRow startRow)
+        public List<User> getUserNames(ProductTextRow startRow)
         {
-            List<user> result = new List<user>();
+            List<User> result = new List<User>();
             if (fileOK)
             {
                 FileStream stream = new FileStream(this.path, FileMode.Open, FileAccess.Read);
@@ -70,7 +70,7 @@ namespace AuLicCore
                 {
                     row = file.ReadLine();
                     if (row.Contains("start"))
-                        result.Add(new user(getUserNameFromString(row)));                    
+                        result.Add(new User(getUserNameFromString(row)));                    
                 } while (!file.EndOfStream && !row.Contains("Users of"));
                 stream.Dispose();
             }

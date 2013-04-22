@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace AuLicCore
+namespace Core
 {
     public class Product
     {
@@ -39,8 +39,8 @@ namespace AuLicCore
         int maxusers;
         string name, id;
 
-        List<user> users;
-        public List<user> Users
+        List<User> users;
+        public List<User> Users
         {
             get
             {
@@ -51,7 +51,7 @@ namespace AuLicCore
         List<Product> children;
 
 
-        public Product(ProductTextRow row, licFile parentFile)
+        public Product(ProductTextRow row, LicFile parentFile)
         //Users of 64300ACD_F:  (Total of 23 licenses issued;  Total of 19 licenses in use)
         {
             this.id = row.ProductID;

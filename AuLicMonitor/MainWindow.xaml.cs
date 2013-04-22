@@ -11,7 +11,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using AuLicCore;
+using Core;
 
 namespace AuLicMonitor
 {
@@ -20,13 +20,13 @@ namespace AuLicMonitor
     /// </summary>
     public partial class MainWindow : Window
     {
-        SerializableFilenamesSaver fileNames;
+        PREFERENCES fileNames;
 
         public MainWindow()
         {
             InitializeComponent();
-            fileNames = new SerializableFilenamesSaver();
-            foreach (string s in fileNames.Members)
+            fileNames = new PREFERENCES();
+            foreach (string s in fileNames.Filenames)
             {
                 bool fileExists = false;
                 if (System.IO.File.Exists(s))
@@ -45,13 +45,13 @@ namespace AuLicMonitor
 
             if (fileExists)
             {
-                licFile file = new licFile(rootItemName, filename);
+                LicFile file = new LicFile(rootItemName, filename);
                 foreach (Product p in file.Products)
                 {
                     TreeViewItem product = new TreeViewItem();
                     product.Header = p.ID + ": " + p.currUsers + " of " + p.maxUsers + " users.";
                     product.IsExpanded = false;
-                    foreach (user u in p.Users)
+                    foreach (User u in p.Users)
                     {
                         product.Items.Add(u.Name);
                     }
@@ -66,7 +66,7 @@ namespace AuLicMonitor
             }
 
             treeView.Items.Add(RootItem);
-            fileNames.Add(filename);
+            fileNames.AddFileName(filename);
         }
 
         private string getLicFilePath()
@@ -97,9 +97,12 @@ namespace AuLicMonitor
             TreeViewItem item = treeView.SelectedItem as TreeViewItem;
             if (item != null)
             {
-                treeView.Items.Remove(item);
-                string fileName = item.Tag.ToString();
-                fileNames.Remove(fileName);
+                if (item.Parent.GetType() == typeof(System.Windows.Controls.TreeView))
+                {
+                    treeView.Items.Remove(item);
+                    string fileName = item.Tag.ToString();
+                    fileNames.RemoveFileName(fileName);
+                }
             }
         }
 

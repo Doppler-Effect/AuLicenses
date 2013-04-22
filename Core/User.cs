@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace AuLicCore
+namespace Core
 {
-    public class user
+    public class User
     {
         string name;
         public string Name
@@ -16,7 +16,7 @@ namespace AuLicCore
             }
         }
 
-        public user(string name)
+        public User(string name)
         {
             this.name = name;
         }

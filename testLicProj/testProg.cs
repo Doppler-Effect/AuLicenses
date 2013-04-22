@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
-using AuLicCore;
+using Core;
 
 namespace testLicProj
 {
@@ -11,16 +10,7 @@ namespace testLicProj
     {
         static void Main(string[] args)
         {
-            licFile file = new licFile("File1", "D:\\Documents\\Dropbox\\work\\status_venera.txt");
-            foreach (Product pr in file.Products)
-            {
-                Console.WriteLine("Пользователи продукта {0}", pr.ID);
-                foreach (user usr in pr.Users)
-                {
-                    Console.WriteLine("   {0}", usr.Name);
-                }
-            }
-            Console.ReadKey();
+            State stt = new State("\\\\venera\\autodesk_lic_status\\status_venera.txt");
         }
     }
 }
