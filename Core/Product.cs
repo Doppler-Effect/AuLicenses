@@ -5,6 +5,7 @@ using System.Text;
 
 namespace Core
 {
+    [Serializable()]
     public class Product
     {
         public string Name
@@ -49,7 +50,6 @@ namespace Core
         }
 
         List<Product> children;
-
 
         public Product(ProductTextRow row, LicFile parentFile)
         //Users of 64300ACD_F:  (Total of 23 licenses issued;  Total of 19 licenses in use)

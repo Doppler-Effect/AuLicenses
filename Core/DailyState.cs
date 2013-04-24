@@ -11,7 +11,7 @@ namespace Core
     /// Хранилище для данных за день работы. Содержит таймстэмп дня и массив State-ов за этот день.
     /// </summary>
     [Serializable()]
-    public class DailyLogFile
+    public class DailyState : SerializeableClass
     {
         DateTime date;
         public DateTime Date
@@ -25,20 +25,31 @@ namespace Core
             get { return states; }
         }
 
-        public DailyLogFile(DateTime Date)
+        public override string FilePath
         {
+            get { return Path.Combine(PREFERENCES.LogDirectoryPath, this.date.ToShortDateString() + FILEEXTENSION); }
+        }
+
+        public DailyState()
+        {
+            this.FILEEXTENSION = ".ipndaily";
+
             if (Directory.Exists(PREFERENCES.DailyLogDirectoryPath))
             {
-                this.date = Date;
+                this.date = DateTime.Now.Date;
                 this.states = new List<State>();
 
                 IEnumerable<string> files = Directory.EnumerateFiles(PREFERENCES.DailyLogDirectoryPath);
                 foreach (string f in files)
                 {
-                    State S = State.Load(f);
+                    State S = (State)State.Load(f);
                     this.states.Add(S);
                 }
+                
+                this.Save(this.FilePath);
+
+                Directory.Delete(PREFERENCES.DailyLogDirectoryPath, true);
             }
-        }
+        }        
     }    
 }

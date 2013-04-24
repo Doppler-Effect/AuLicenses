@@ -10,7 +10,12 @@ namespace testLicProj
     {
         static void Main(string[] args)
         {
-            State stt = new State("\\\\venera\\autodesk_lic_status\\status_venera.txt");
+            for (int i = 0; i < 10; i++)
+            {
+                new State("\\\\venera\\autodesk_lic_status\\status_venera.txt");
+                System.Threading.Thread.Sleep(1000);
+            }
+            DailyState d = new DailyState();
         }
     }
 }

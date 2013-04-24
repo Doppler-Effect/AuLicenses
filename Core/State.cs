@@ -9,10 +9,8 @@ using System.Runtime.Serialization.Formatters.Binary;
 namespace Core
 {
     [Serializable()]
-    public class State
+    public class State : SerializeableClass
     {
-        const string FILEEXTENSION = ".ipnlicstate";
-
         DateTime datetime;        
         public DateTime Datetime
         {
@@ -25,35 +23,23 @@ namespace Core
             get { return products; }
         }
 
+        public override string FilePath
+        {
+            get { return Path.Combine(PREFERENCES.DailyLogDirectoryPath, this.datetime.ToString().ReplaceFilenameChars() + FILEEXTENSION); }
+        }
+
         public State(string licfilepath)
-        {     
+        {
+            this.FILEEXTENSION = ".ipnlicstate";
+
             if(File.Exists(licfilepath))
             {                
                 LicFile file = new LicFile("file", licfilepath);
                 this.products = file.Products;
-                this.datetime = DateTime.Now;
-
-                string filePath = Path.Combine(PREFERENCES.DailyLogDirectoryPath, this.datetime.ToString() + ".bin"/*FILEEXTENSION*/);
-                this.Save(filePath);
+                this.datetime = DateTime.Now;                
+                
+                this.Save(this.FilePath);
             }
         } 
-
-        public void Save(string filePath)
-        {
-            FileStream stream = File.Create(filePath);
-            BinaryFormatter serializer = new BinaryFormatter();
-            serializer.Serialize(stream, this);
-            stream.Close();
-        }
-
-        public static State Load(string path)
-        {
-            State result;
-            FileStream stream = File.OpenRead(path);
-            BinaryFormatter deserializer = new BinaryFormatter();
-            result = (State)deserializer.Deserialize(stream);
-            stream.Close();
-            return result;
-        }
     }
 }

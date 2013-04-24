@@ -18,6 +18,7 @@ namespace Core
             get 
             {
                 return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "IPN License usage log");
+                //return Path.Combine(Environment.GetLogicalDrives()[0], "IPN License usage log");
             }
         }
 

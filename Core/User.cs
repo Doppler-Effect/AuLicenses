@@ -5,6 +5,7 @@ using System.Text;
 
 namespace Core
 {
+    [Serializable()]
     public class User
     {
         string name;
