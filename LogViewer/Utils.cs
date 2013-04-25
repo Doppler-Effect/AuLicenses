@@ -9,7 +9,7 @@ namespace LogViewer
 {
     static class Utils
     {
-        public static Product FindProduct(State s, string name)
+        public static Product FindProduct(this State s, string name)
         {
             Product result = null;
             foreach (Product p in s.Products)
