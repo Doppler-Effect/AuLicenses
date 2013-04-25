@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
@@ -19,6 +20,8 @@ namespace Core
             get { return date; }
         }
 
+        public const string FILEEXTENSION = ".ipndaily";
+
         List<State> states;
         public List<State> States
         {
@@ -32,8 +35,6 @@ namespace Core
 
         public DailyState()
         {
-            this.FILEEXTENSION = ".ipndaily";
-
             if (Directory.Exists(PREFERENCES.DailyLogDirectoryPath))
             {
                 this.date = DateTime.Now.Date;

@@ -8,14 +8,19 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Core
 {
+    /// <summary>
+    /// "Снимок" состояния lic-файла в определённое время.
+    /// </summary>
     [Serializable()]
-    public class State : SerializeableClass
+    public class State : SerializeableClass, IComparable<State>
     {
         DateTime datetime;        
         public DateTime Datetime
         {
             get { return datetime; }
         }
+
+        public const string FILEEXTENSION = ".ipnlicstate";
 
         List<Product> products;
         public List<Product> Products
@@ -28,10 +33,18 @@ namespace Core
             get { return Path.Combine(PREFERENCES.DailyLogDirectoryPath, this.datetime.ToString().ReplaceFilenameChars() + FILEEXTENSION); }
         }
 
+        public int CompareTo(State state)
+        {
+            if (state != null)
+            {
+                return this.Datetime.CompareTo(state.Datetime);
+            }
+            else
+                return 1;
+        }
+
         public State(string licfilepath)
         {
-            this.FILEEXTENSION = ".ipnlicstate";
-
             if(File.Exists(licfilepath))
             {                
                 LicFile file = new LicFile("file", licfilepath);

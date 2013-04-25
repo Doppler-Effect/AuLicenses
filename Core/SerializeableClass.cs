@@ -10,8 +10,6 @@ namespace Core
     [Serializable()]
     public abstract class SerializeableClass
     {
-        protected string FILEEXTENSION;
-
         public abstract string FilePath
         {
             get;
