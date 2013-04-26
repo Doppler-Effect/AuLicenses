@@ -49,18 +49,32 @@ namespace LogViewer
         {
             get
             {
-                List<string> IDs = new List<string>();
-                foreach (State s in this.states)
+                return this.states.FindAllProductIDs();
+            }
+        }
+
+        public List<State> NormalizedStates
+        {
+            get
+            {
+                List<State> temp = new List<State>(this.states);
+                List<State> result = new List<State>();
+                for (int i = 0; i < temp.Count; i++)
                 {
-                    foreach (Product p in s.Products)
+                    State S = this.states[i];
+                    for (int j = i + 1; j < temp.Count; j++)
                     {
-                        if (!IDs.Contains(p.ID))
-                        {
-                            IDs.Add(p.ID);
-                        }
+                        S.Merge(this.states[j]);
                     }
                 }
-                return IDs;
+
+                foreach (State S in temp)
+                {
+                    if (!S.IsMerged)
+                        result.Add(S);
+                }
+                result.Sort(State.CompareByTime);
+                return result;
             }
         }
     }

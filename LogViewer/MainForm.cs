@@ -16,6 +16,7 @@ namespace LogViewer
     public partial class MainForm : Form
     {
         StatesContainer statesContainer;
+        //bool DrawNormalized;
 
         public MainForm()
         {
@@ -46,8 +47,7 @@ namespace LogViewer
             {
                 foreach (string ID in this.statesContainer.AllProductIDs)
                 {
-                    this.productsListBox.Items.Add(ID, true);
-                    drawChart();
+                    this.productsListBox.Items.Add(ID, false);
                 }
             }
         }
@@ -58,22 +58,28 @@ namespace LogViewer
             foreach (string ID in this.productsListBox.CheckedItems)
             {
                 ChartArea area = mainChart.ChartAreas[0];
+
+                area.AxisY.Title = "Количество лицензий";
                 area.AxisY.Interval = 1;
+
                 area.AxisX.IntervalType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Minutes;
                 area.AxisX.IntervalAutoMode = IntervalAutoMode.FixedCount;
                 area.AxisX.Title = "Время";
-                area.AxisY.Title = "Количество лицензий";
+                area.AxisX.Interval = 30;
 
                 Series series = new Series(ID);
-                series.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
+                series.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
                 series.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Time;
                 series.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Int32;
                 series.BorderWidth = 5;
                 series.LegendText = ID;
-                foreach (State s in this.statesContainer.States)
+
+                //List<State> states = DrawNormalized ? this.statesContainer.NormalizedStates : this.statesContainer.States;
+
+                foreach (State s in this.statesContainer.NormalizedStates)
                 {
-                    Product p = s.FindProduct(ID);
-                    double y = p == null ? 0 : p.currUsers;
+                    Product p = s.FindProductByName(ID);
+                    double y = p == null ? 0 : p.currUsersNum;
                     series.Points.AddXY(s.Datetime, y);
                 }
                 mainChart.Series.Add(series);

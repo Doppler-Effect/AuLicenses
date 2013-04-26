@@ -22,22 +22,34 @@ namespace Core
                 return id;
             }
         }
-        public int maxUsers
+        public int maxUsersNum
         {
             get
             {
                 return this.maxusers;
             }
         }
-        public int currUsers
+        public double currUsersNum
         {
             get
             {
-                return this.users.Count;
+                if (IsNormalized)
+                    return this.mergedUserNum;
+                else
+                    return this.users.Count;
+            }
+        }
+        bool isNormalized;
+        public bool IsNormalized
+        {
+            get
+            {
+                return this.isNormalized;
             }
         }
 
         int maxusers;
+        double mergedUserNum;
         string name, id;
 
         List<User> users;
@@ -49,7 +61,7 @@ namespace Core
             }
         }
 
-        List<Product> children;
+        //List<Product> children;
 
         public Product(ProductTextRow row, LicFile parentFile)
         //Users of 64300ACD_F:  (Total of 23 licenses issued;  Total of 19 licenses in use)
@@ -57,6 +69,17 @@ namespace Core
             this.id = row.ProductID;
             this.maxusers = row.MaxUsers;
             this.users = parentFile.getUserNames(row);
-        }        
+            this.isNormalized = false;
+        }
+
+        public void Merge(Product newP)
+        {
+            if (newP != null)
+            {
+                this.mergedUserNum = (this.currUsersNum + newP.currUsersNum) / 2;
+                this.users.Clear();
+                this.isNormalized = true;
+            }
+        }
     }
 }

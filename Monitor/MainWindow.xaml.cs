@@ -49,7 +49,7 @@ namespace AuLicMonitor
                 foreach (Product p in file.Products)
                 {
                     TreeViewItem product = new TreeViewItem();
-                    product.Header = p.ID + ": " + p.currUsers + " of " + p.maxUsers + " users.";
+                    product.Header = p.ID + ": " + p.currUsersNum + " of " + p.maxUsersNum + " users.";
                     product.IsExpanded = false;
                     foreach (User u in p.Users)
                     {

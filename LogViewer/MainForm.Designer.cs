@@ -111,7 +111,7 @@
             this.productsListBox.FormattingEnabled = true;
             this.productsListBox.Location = new System.Drawing.Point(12, 126);
             this.productsListBox.Name = "productsListBox";
-            this.productsListBox.Size = new System.Drawing.Size(147, 302);
+            this.productsListBox.Size = new System.Drawing.Size(147, 272);
             this.productsListBox.TabIndex = 6;
             this.productsListBox.TabStop = false;
             this.productsListBox.SelectedIndexChanged += new System.EventHandler(this.productsListBox_SelectedIndexChanged);
