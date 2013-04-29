@@ -11,7 +11,7 @@ namespace Core
     [Serializable()]
     public class PREFERENCES
     {
-        const string FILEPATH = "AULicUtil_pref.bin";
+        const string PREFFILENAME = "IPN_LicUtilPref.bin";
 
         public static string LogDirectoryPath
         {
@@ -29,10 +29,21 @@ namespace Core
                 return Path.Combine(LogDirectoryPath, "Daily");
             }
         }
+
+        Dictionary<string, string> productNames;
+        public Dictionary<string, string> ProductNames
+        {
+            get { return this.productNames; }
+        }
+
+        public void UpdateProductNames()
+        {
+
+        }
         
         public PREFERENCES()
         {
-            if (File.Exists(FILEPATH))
+            if (File.Exists(PREFFILENAME))
             {
                 PREFERENCES p = deserialize();
                 this.filenames = p.filenames;
@@ -72,7 +83,7 @@ namespace Core
 
         public static void serialize(PREFERENCES data)
         {
-            FileStream stream = File.Create(FILEPATH);
+            FileStream stream = File.Create(PREFFILENAME);
             BinaryFormatter serializer = new BinaryFormatter();
             serializer.Serialize(stream, data);
             stream.Close();
@@ -81,7 +92,7 @@ namespace Core
         public static PREFERENCES deserialize()
         {
             PREFERENCES result;
-            FileStream stream = File.OpenRead(FILEPATH);
+            FileStream stream = File.OpenRead(PREFFILENAME);
             BinaryFormatter deserializer = new BinaryFormatter();
             result = (PREFERENCES)deserializer.Deserialize(stream);
             stream.Close();
