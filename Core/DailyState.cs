@@ -22,6 +22,17 @@ namespace Core
 
         public const string FILEEXTENSION = ".ipndaily";
 
+        public bool IsHoliday
+        {
+            get
+            {
+                if (this.date.DayOfWeek == DayOfWeek.Saturday || this.date.DayOfWeek == DayOfWeek.Sunday)
+                    return true;
+                else
+                    return false;
+            }
+        }
+
         List<State> states;
         public List<State> States
         {

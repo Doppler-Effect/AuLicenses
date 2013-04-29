@@ -15,7 +15,7 @@ namespace LogWriter
         static void Main(string[] args)
         {
             DateTime currenttime = DateTime.Now;
-            DateTime startTime = new DateTime(currenttime.Date.Ticks).AddHours(8);
+            DateTime startTime = new DateTime(currenttime.Date.Ticks).AddHours(7);
             DateTime finishTime = new DateTime(currenttime.Date.Ticks).AddHours(19);
             if (currenttime >= startTime && currenttime <= finishTime)
             {

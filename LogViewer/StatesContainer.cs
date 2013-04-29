@@ -18,31 +18,59 @@ namespace LogViewer
         {
             get { return states; }
         }
-
-        public StatesContainer(string path)
+                
+        public StatesContainer(string DirectoryPath, bool? ShowHolidays = false)
         {
-            if (Directory.Exists(path))
+            if (Directory.Exists(DirectoryPath))
             {
-                this.states = new List<State>();
+                IEnumerable<string> filenames = Directory.EnumerateFiles(DirectoryPath);
+                MakeStates(filenames, ShowHolidays);
+            }
+        }
 
-                foreach (string file in Directory.EnumerateFiles(path))
+        public StatesContainer(IEnumerable<string> filenames, bool? ShowHolidays = false)
+        {
+            MakeStates(filenames, ShowHolidays);
+        }
+
+        private void MakeStates(IEnumerable<string> filenames, bool? ShowHolidays)
+        {
+            this.states = new List<State>();
+
+            foreach (string file in filenames)
+            {
+                string extension = Path.GetExtension(file);
+
+                if (extension == State.FILEEXTENSION)
                 {
-                    string extension = Path.GetExtension(file);
+                    State s = (State)State.Load(file);
+                    this.states.Add(s);
+                }
+                if (extension == DailyState.FILEEXTENSION)
+                {
+                    DailyState ds = (DailyState)DailyState.Load(file);
 
-                    if (extension == State.FILEEXTENSION)
+                    if (!ShowHolidays.HasValue)
                     {
-                        State s = (State)State.Load(file);
-                        this.states.Add(s);
-                    }
-                    if (extension == DailyState.FILEEXTENSION)
-                    {
-                        DailyState ds = (DailyState)DailyState.Load(file);
                         foreach (State s in ds.States)
                             this.states.Add(s);
                     }
+                    else
+                    {                        
+                        if (ShowHolidays.Value && ds.IsHoliday)
+                        {
+                            foreach (State s in ds.States)
+                                this.states.Add(s);
+                        }
+                        if (!ShowHolidays.Value && !ds.IsHoliday)
+                        {
+                            foreach (State s in ds.States)
+                                this.states.Add(s);
+                        }
+                    }
                 }
-                this.states.Sort();
             }
+            this.states.Sort();
         }
 
         public List<string> AllProductIDs
@@ -53,28 +81,52 @@ namespace LogViewer
             }
         }
 
+        public int MaxUsersCount
+        {
+            get
+            {
+                int result = 0;
+                foreach (State S in this.states)
+                {
+                    foreach (Product P in S.Products)
+                    {
+                        if (P.currUsersNum > result)
+                            result = (int)P.currUsersNum;
+                    }
+                }
+                return result;
+            }
+        }
+
+        List<State> normalized;
         public List<State> NormalizedStates
         {
             get
             {
-                List<State> temp = new List<State>(this.states);
-                List<State> result = new List<State>();
-                for (int i = 0; i < temp.Count; i++)
+                if (normalized == null)
                 {
-                    State S = this.states[i];
-                    for (int j = i + 1; j < temp.Count; j++)
+                    List<State> temp = new List<State>(this.states);
+                    this.normalized = new List<State>();
+                    for (int i = 0; i < temp.Count; i++)
                     {
-                        S.Merge(this.states[j]);
+                        State S = this.states[i];
+                        if (!S.IsMerged)
+                        {
+                            for (int j = i + 1; j < temp.Count; j++)
+                            {
+                                S.Merge(this.states[j]);
+                            }
+                        }
                     }
-                }
 
-                foreach (State S in temp)
-                {
-                    if (!S.IsMerged)
-                        result.Add(S);
+                    foreach (State S in temp)
+                    {
+                        if (!S.IsMerged)
+                            normalized.Add(S);
+                    }
+                    normalized.Sort(State.CompareByTime);
                 }
-                result.Sort(State.CompareByTime);
-                return result;
+                return this.normalized;
             }
         }
     }

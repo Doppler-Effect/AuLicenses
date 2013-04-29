@@ -23,7 +23,7 @@ namespace Core
             get { return isMerged; }
             set { isMerged = value; }
         }
-
+                
         DateTime datetime;        
         public DateTime Datetime
         {
@@ -93,10 +93,10 @@ namespace Core
             if(File.Exists(licfilepath))
             {                
                 LicFile file = new LicFile("file", licfilepath);
-                this.products = file.Products;
+                this.products = file.Products;                
                 this.datetime = DateTime.Now;                
                 
-                if(Save)
+                if(Save && products.Count != 0)
                     this.Save(this.FilePath);
             }
         }        

@@ -16,33 +16,63 @@ namespace LogViewer
     public partial class MainForm : Form
     {
         StatesContainer statesContainer;
-        //bool DrawNormalized;
+        bool ShowOnlyHolidays
+        {
+            get { return this.radioButtonHolidays.Checked; }
+        }
 
         public MainForm()
         {
             InitializeComponent();
         }
 
-        private void buttonOpenAll_Click(object sender, EventArgs e)
+        private void radioButtonWorkDays_MouseClick(object sender, MouseEventArgs e)
         {
-            drawProductList(PREFERENCES.LogDirectoryPath);
+            makeStatesContainer(PREFERENCES.LogDirectoryPath);
         }
 
-        private void buttonOpenDaily_Click(object sender, EventArgs e)
+        private void radioButtonHolidays_MouseClick(object sender, MouseEventArgs e)
         {
-            drawProductList(PREFERENCES.DailyLogDirectoryPath);
+            makeStatesContainer(PREFERENCES.LogDirectoryPath);
         }
+
+        private void buttonOpenToday_Click(object sender, EventArgs e)
+        {
+            makeStatesContainer(PREFERENCES.DailyLogDirectoryPath);
+        }
+
+        private void buttonOpenDay_Click(object sender, EventArgs e)
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.CheckFileExists = true;
+            dialog.Filter = String.Format("Daily log files (*{0})|*{0}", DailyState.FILEEXTENSION);
+            dialog.Multiselect = true;
+            dialog.InitialDirectory = PREFERENCES.LogDirectoryPath;
+            if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                this.makeStatesContainer(dialog.FileNames);
+        } 
 
         private void productsListBox_SelectedIndexChanged(object sender, EventArgs e)
         {
-            drawChart();
+            drawChart(this.statesContainer.NormalizedStates);
         }
 
-        void drawProductList(string DirectoryPath)
+        void makeStatesContainer(string DirectoryPath)
+        {            
+            this.statesContainer = new StatesContainer(DirectoryPath, this.ShowOnlyHolidays);
+            DrawProductList();
+        }
+
+        void makeStatesContainer(string[] files)
+        {
+            this.statesContainer = new StatesContainer(files, null);
+            DrawProductList();
+        }
+
+        void DrawProductList()
         {
             this.productsListBox.Items.Clear();
             mainChart.Series.Clear();
-            this.statesContainer = new StatesContainer(DirectoryPath);
             if (this.statesContainer.States != null)
             {
                 foreach (string ID in this.statesContainer.AllProductIDs)
@@ -51,9 +81,9 @@ namespace LogViewer
                 }
             }
         }
-
-        void drawChart()
-        {
+        
+        void drawChart(List<State> statesList)
+        {            
             mainChart.Series.Clear();
             foreach (string ID in this.productsListBox.CheckedItems)
             {
@@ -61,6 +91,7 @@ namespace LogViewer
 
                 area.AxisY.Title = "Количество лицензий";
                 area.AxisY.Interval = 1;
+                area.AxisY.Maximum = this.statesContainer.MaxUsersCount + 1;
 
                 area.AxisX.IntervalType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Minutes;
                 area.AxisX.IntervalAutoMode = IntervalAutoMode.FixedCount;
@@ -68,24 +99,24 @@ namespace LogViewer
                 area.AxisX.Interval = 30;
 
                 Series series = new Series(ID);
-                series.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Spline;
+                series.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
                 series.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Time;
                 series.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Int32;
                 series.BorderWidth = 5;
-                series.LegendText = ID;
-
-                //List<State> states = DrawNormalized ? this.statesContainer.NormalizedStates : this.statesContainer.States;
-
-                foreach (State s in this.statesContainer.NormalizedStates)
+                series.LegendText = ID;                
+                
+                foreach (State s in statesList)
                 {
                     Product p = s.FindProductByName(ID);
                     double y = p == null ? 0 : p.currUsersNum;
-                    series.Points.AddXY(s.Datetime, y);
+                    DataPoint point = new DataPoint(series);
+                    point.SetValueXY(s.Datetime, y);
+                    point.ToolTip = y.ToString();
+                    //series.Points.AddXY(s.Datetime, y);
+                    series.Points.Add(point);
                 }
-                mainChart.Series.Add(series);
+                mainChart.Series.Add(series);               
             }
         }
-
-        
     }    
 }
