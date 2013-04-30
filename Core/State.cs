@@ -106,7 +106,7 @@ namespace Core
             int dHour = Math.Abs(this.Datetime.Hour - newState.Datetime.Hour);
             int dMinute = Math.Abs(this.Datetime.Minute - newState.Datetime.Minute);
 
-            if (dHour == 0 && dMinute < 3)
+            if (dHour == 0 && dMinute < 5)
             {
                 foreach (string pName in Core.Utils.FindAllProductNames(new State[] { this, newState }))
                 {
@@ -123,6 +123,6 @@ namespace Core
                 }
                 newState.IsMerged = true;
             }
-        }        
+        } 
     }
 }

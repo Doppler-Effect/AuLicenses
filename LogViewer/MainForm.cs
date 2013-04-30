@@ -20,6 +20,7 @@ namespace LogViewer
         {
             get { return this.radioButtonHolidays.Checked; }
         }
+        ToolTip tooltip;
 
         public MainForm()
         {
@@ -73,6 +74,8 @@ namespace LogViewer
         {
             this.productsListBox.Items.Clear();
             mainChart.Series.Clear();
+            this.tooltip = null;
+
             if (this.statesContainer.States != null)
             {
                 foreach (Product P in this.statesContainer.AllProducts)
@@ -113,11 +116,41 @@ namespace LogViewer
 
                     DataPoint point = new DataPoint(series);
                     point.SetValueXY(s.Datetime, y);
-                    point.ToolTip = y.ToString();
-                    //series.Points.AddXY(s.Datetime, y);
+                    point.Tag = p;
+
                     series.Points.Add(point);
                 }
                 mainChart.Series.Add(series);               
+            }
+        }
+
+        private void mainChart_MouseClick(object sender, MouseEventArgs e)
+        {
+            HitTestResult pos = mainChart.HitTest(e.X, e.Y);
+            if (pos.ChartElementType == ChartElementType.DataPoint)
+            {
+                int pointIndex = pos.PointIndex;
+                Series series = pos.Series;
+                DataPoint point = series.Points[pointIndex];
+                Product P = point.Tag as Product;
+                if (P != null)
+                {                    
+                    if (SeriesNormalized(series))
+                    {
+                        string Info = String.Format("{0}, усреднённые показания: {1} из {2}", series.Name, P.currUsersNum, P.maxUsersNum);
+                        this.tooltip = new ToolTip();
+                        tooltip.SetToolTip(mainChart, Info);
+                        tooltip.Active = true;
+                    }
+                    else
+                    {
+                        string Info = series.Name;
+                        string usrs = String.Format("Использовано {0} из {1} лицензий:\n\n", P.currUsersNum, P.maxUsersNum);
+                        foreach (User user in P.Users)
+                            usrs += string.Format("{0}\n", user.Name);
+                        MessageBox.Show(usrs, Info, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    }
+                }
             }
         }
 
@@ -128,6 +161,23 @@ namespace LogViewer
                 NamesWindow win = new NamesWindow(this.statesContainer.States);
                 win.Show();
             }
+        }
+                
+        private bool SeriesNormalized(Series series)
+        {            
+            foreach (DataPoint point in series.Points)
+            {
+                if (point.Tag != null)
+                {
+                    if (point.Tag.GetType() == typeof(Product))
+                    {
+                        Product p = (Product)point.Tag;
+                        if (p.IsNormalized)
+                            return true;
+                    }
+                }
+            }
+            return false;
         }
     }    
 }
