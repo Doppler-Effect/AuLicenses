@@ -108,7 +108,7 @@ namespace Core
 
             if (dHour == 0 && dMinute < 3)
             {
-                foreach (string pName in Core.Utils.FindAllProductIDs(new State[] { this, newState }))
+                foreach (string pName in Core.Utils.FindAllProductNames(new State[] { this, newState }))
                 {
                     Product thisP, newP;
                     thisP = this.FindProductByName(pName);

@@ -44,8 +44,9 @@
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView1.Location = new System.Drawing.Point(0, 0);
             this.dataGridView1.Name = "dataGridView1";
-            this.dataGridView1.Size = new System.Drawing.Size(270, 491);
+            this.dataGridView1.Size = new System.Drawing.Size(360, 491);
             this.dataGridView1.TabIndex = 0;
+            this.dataGridView1.KeyUp += new System.Windows.Forms.KeyEventHandler(this.dataGridView1_KeyPress);
             // 
             // ID
             // 
@@ -53,27 +54,25 @@
             this.ID.HeaderText = "ID Продукта";
             this.ID.Name = "ID";
             this.ID.ReadOnly = true;
-            this.ID.Resizable = System.Windows.Forms.DataGridViewTriState.False;
+            this.ID.Width = 150;
             // 
             // NAME
             // 
             this.NAME.HeaderText = "Имя продукта";
             this.NAME.Name = "NAME";
-            this.NAME.Width = 120;
+            this.NAME.Width = 150;
             // 
             // NamesWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(270, 491);
-            this.ControlBox = false;
+            this.ClientSize = new System.Drawing.Size(360, 491);
             this.Controls.Add(this.dataGridView1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.Name = "NamesWindow";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
-            this.Text = "NamesWindow";
-            this.TopMost = true;
+            this.Text = "Редактор названий (Enter = OK)";
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
 

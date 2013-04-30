@@ -26,7 +26,7 @@ namespace AuLicMonitor
         {
             InitializeComponent();
             fileNames = new PREFERENCES();
-            foreach (string s in fileNames.Filenames)
+            foreach (string s in fileNames.MonitorFilenames)
             {
                 bool fileExists = false;
                 if (System.IO.File.Exists(s))
@@ -66,7 +66,7 @@ namespace AuLicMonitor
             }
 
             treeView.Items.Add(RootItem);
-            fileNames.AddFileName(filename);
+            fileNames.AddMonitorFileName(filename);
         }
 
         private string getLicFilePath()
@@ -101,7 +101,7 @@ namespace AuLicMonitor
                 {
                     treeView.Items.Remove(item);
                     string fileName = item.Tag.ToString();
-                    fileNames.RemoveFileName(fileName);
+                    fileNames.RemoveMonitorFileName(fileName);
                 }
             }
         }

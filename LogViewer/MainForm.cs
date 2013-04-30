@@ -75,9 +75,10 @@ namespace LogViewer
             mainChart.Series.Clear();
             if (this.statesContainer.States != null)
             {
-                foreach (string ID in this.statesContainer.AllProductIDs)
+                foreach (Product P in this.statesContainer.AllProducts)
                 {
-                    this.productsListBox.Items.Add(ID, false);
+                    
+                    this.productsListBox.Items.Add(P.Name, false);
                 }
             }
         }
@@ -85,7 +86,7 @@ namespace LogViewer
         void drawChart(List<State> statesList)
         {            
             mainChart.Series.Clear();
-            foreach (string ID in this.productsListBox.CheckedItems)
+            foreach (string name in this.productsListBox.CheckedItems)
             {
                 ChartArea area = mainChart.ChartAreas[0];
 
@@ -98,17 +99,18 @@ namespace LogViewer
                 area.AxisX.Title = "Время";
                 area.AxisX.Interval = 30;
 
-                Series series = new Series(ID);
+                Series series = new Series(name);
                 series.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Line;
                 series.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Time;
                 series.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Int32;
                 series.BorderWidth = 5;
-                series.LegendText = ID;                
+                series.LegendText = name;                
                 
                 foreach (State s in statesList)
                 {
-                    Product p = s.FindProductByName(ID);
+                    Product p = s.FindProductByName(name);
                     double y = p == null ? 0 : p.currUsersNum;
+
                     DataPoint point = new DataPoint(series);
                     point.SetValueXY(s.Datetime, y);
                     point.ToolTip = y.ToString();
@@ -116,6 +118,15 @@ namespace LogViewer
                     series.Points.Add(point);
                 }
                 mainChart.Series.Add(series);               
+            }
+        }
+
+        private void buttonProductNames_Click(object sender, EventArgs e)
+        {
+            if(this.statesContainer != null)
+            {
+                NamesWindow win = new NamesWindow(this.statesContainer.States);
+                win.Show();
             }
         }
     }    

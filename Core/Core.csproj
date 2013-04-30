@@ -49,6 +49,7 @@
     <Compile Include="NamesWindow.Designer.cs">
       <DependentUpon>NamesWindow.cs</DependentUpon>
     </Compile>
+    <Compile Include="ProductNamesContainer.cs" />
     <Compile Include="ProductTextRow.cs" />
     <Compile Include="Preferences.cs" />
     <Compile Include="LicFile.cs" />

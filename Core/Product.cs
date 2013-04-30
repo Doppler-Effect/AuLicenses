@@ -6,20 +6,20 @@ using System.Text;
 namespace Core
 {
     [Serializable()]
-    public class Product
+    public class Product : IEquatable<Product>
     {
+        public string ID
+        {
+            get { return id; }
+        }
         public string Name
         {
             get
             {
-                return name;
-            }
-        }
-        public string ID
-        {
-            get
-            {
-                return id;
+                if (ProductNamesContainer.ProductNames.ContainsKey(this.id) && !String.IsNullOrEmpty(ProductNamesContainer.ProductNames[this.id]))
+                    return ProductNamesContainer.ProductNames[this.id];
+                else
+                    return this.id;
             }
         }
         public int maxUsersNum
@@ -50,7 +50,9 @@ namespace Core
 
         int maxusers;
         double mergedUserNum;
-        string name, id;
+        string id;
+
+        
 
         List<User> users;
         public List<User> Users
@@ -61,7 +63,15 @@ namespace Core
             }
         }
 
-        //List<Product> children;
+        public bool Equals(Product P)
+        {
+            if (P == null)
+                return false;
+            if (this.Name == P.Name)
+                return true;
+            else
+                return false;
+        }
 
         public Product(ProductTextRow row, LicFile parentFile)
         //Users of 64300ACD_F:  (Total of 23 licenses issued;  Total of 19 licenses in use)
@@ -81,5 +91,6 @@ namespace Core
                 this.isNormalized = true;
             }
         }
+
     }
 }

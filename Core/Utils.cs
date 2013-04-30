@@ -17,21 +17,32 @@ namespace Core
             return name;
         }
 
-        public static List<string> FindAllProductIDs(this IEnumerable<State> states)
+        public static List<string> FindAllProductNames(this IEnumerable<State> states)
         {
-            List<string> IDs = new List<string>();
+            List<Product> products = states.FindAllProducts();
+            List<string> Names = new List<string>();
+
+            foreach (Product P in products)
+                Names.Add(P.Name);
+
+            return Names;
+        }
+
+        public static List<Product> FindAllProducts(this IEnumerable<State> states)
+        {
+            List<Product> products = new List<Product>();
 
             foreach (State s in states)
             {
                 foreach (Product p in s.Products)
                 {
-                    if (!IDs.Contains(p.ID))
+                    if (!products.Contains(p))
                     {
-                        IDs.Add(p.ID);
+                        products.Add(p);
                     }
                 }
             }
-            return IDs;
+            return products;
         }
 
         public static Product FindProductByName(this State s, string name)
@@ -39,7 +50,7 @@ namespace Core
             Product result = null;
             foreach (Product p in s.Products)
             {
-                if (p.ID.Contains(name))
+                if (p.Name == name)
                     result = p;
             }
             return result;

@@ -77,10 +77,18 @@ namespace LogViewer
         {
             get
             {
-                return this.states.FindAllProductIDs();
+                return this.states.FindAllProductNames();
             }
         }
 
+        public List<Product> AllProducts
+        {
+            get
+            {
+                return this.states.FindAllProducts();
+            }
+        }
+        
         public int MaxUsersCount
         {
             get

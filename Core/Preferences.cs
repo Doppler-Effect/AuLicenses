@@ -11,14 +11,24 @@ namespace Core
     [Serializable()]
     public class PREFERENCES
     {
-        const string PREFFILENAME = "IPN_LicUtilPref.bin";
+        private string PREF_FILE_PATH
+        {
+            get { return Path.Combine(MainDirectoryPath, "IPN_LicUtilPref.bin"); }
+        }
+
+        public static string MainDirectoryPath
+        {
+            get
+            {
+                return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "IPNLicenseUtil");
+            }
+        }
 
         public static string LogDirectoryPath
         {
             get 
             {
                 return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "IPN License usage log");
-                //return Path.Combine(Environment.GetLogicalDrives()[0], "IPN License usage log");
             }
         }
 
@@ -29,70 +39,60 @@ namespace Core
                 return Path.Combine(LogDirectoryPath, "Daily");
             }
         }
-
-        Dictionary<string, string> productNames;
-        public Dictionary<string, string> ProductNames
-        {
-            get { return this.productNames; }
-        }
-
-        public void UpdateProductNames()
-        {
-
-        }
         
         public PREFERENCES()
         {
-            if (File.Exists(PREFFILENAME))
+            if (File.Exists(PREF_FILE_PATH))
             {
-                PREFERENCES p = deserialize();
-                this.filenames = p.filenames;
+                PREFERENCES p = Load();
+                this.monitorFilenames = p.monitorFilenames;
             }
             else
             {
-                this.filenames = new List<string>();
+                this.monitorFilenames = new List<string>();
             }
         }
 
-        List<string> filenames;
-        public List<string> Filenames
+        List<string> monitorFilenames;
+        public List<string> MonitorFilenames
         {
             get
             {
-                return this.filenames;
+                return this.monitorFilenames;
             }
         }
 
-        public void AddFileName(string s)
+        public void AddMonitorFileName(string s)
         {
-            if (!filenames.Contains(s))
+            if (!monitorFilenames.Contains(s))
             {
-                this.filenames.Add(s);
-                serialize(this);
+                this.monitorFilenames.Add(s);
+                Save();
             }
         }
 
-        public void RemoveFileName(string s)
+        public void RemoveMonitorFileName(string s)
         {
-            if (filenames.Contains(s))
+            if (monitorFilenames.Contains(s))
             {
-                this.filenames.Remove(s);
-                serialize(this);
+                this.monitorFilenames.Remove(s);
+                Save();
             }
         }
 
-        public static void serialize(PREFERENCES data)
+        private void Save()
         {
-            FileStream stream = File.Create(PREFFILENAME);
+            Directory.CreateDirectory(Path.GetDirectoryName(this.PREF_FILE_PATH));
+            FileStream stream = File.Create(PREF_FILE_PATH);
             BinaryFormatter serializer = new BinaryFormatter();
-            serializer.Serialize(stream, data);
+            serializer.Serialize(stream, this);
             stream.Close();
         }
 
-        public static PREFERENCES deserialize()
+        private PREFERENCES Load()
         {
             PREFERENCES result;
-            FileStream stream = File.OpenRead(PREFFILENAME);
+            FileStream stream = File.OpenRead(PREF_FILE_PATH);
             BinaryFormatter deserializer = new BinaryFormatter();
             result = (PREFERENCES)deserializer.Deserialize(stream);
             stream.Close();
