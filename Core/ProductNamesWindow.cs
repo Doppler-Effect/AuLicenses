@@ -9,22 +9,22 @@ using System.Windows.Forms;
 
 namespace Core
 {
-    public partial class NamesWindow : Form
+    public partial class ProductNamesWindow : Form
     {
-        public NamesWindow(List<State> states)
+        public ProductNamesWindow(List<State> states)
         {
             InitializeComponent();
             List<Product> products = states.FindAllProducts();
             FillGrid(products);
         }
 
-        public NamesWindow(List<Product> products)
+        public ProductNamesWindow(List<Product> products)
         {
             InitializeComponent();
             FillGrid(products);
         }
 
-        public NamesWindow(List<string> idS)
+        public ProductNamesWindow(List<string> idS)
         {
             InitializeComponent();
             FillGrid(idS);
@@ -46,8 +46,8 @@ namespace Core
             foreach (string id in idList)
             {
                 string name = null;
-                if(ProductNamesContainer.ProductNames.ContainsKey(id))
-                    name = ProductNamesContainer.ProductNames[id];
+                if(PREFERENCES.Instance.ProductNames.ContainsKey(id))
+                    name = PREFERENCES.Instance.ProductNames[id];
                 this.dataGridView1.Rows.Add(id, name);
             }
         }
@@ -73,7 +73,7 @@ namespace Core
 
                 if (names.Count != 0)
                 {
-                    ProductNamesContainer.UpdateProductNames(names);
+                    PREFERENCES.Instance.UpdateProductNames(names);
                 }
                 this.Close();
             }

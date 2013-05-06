@@ -43,13 +43,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DailyState.cs" />
-    <Compile Include="NamesWindow.cs">
+    <Compile Include="ProductNamesWindow.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="NamesWindow.Designer.cs">
-      <DependentUpon>NamesWindow.cs</DependentUpon>
+    <Compile Include="ProductNamesWindow.Designer.cs">
+      <DependentUpon>ProductNamesWindow.cs</DependentUpon>
     </Compile>
-    <Compile Include="ProductNamesContainer.cs" />
     <Compile Include="ProductTextRow.cs" />
     <Compile Include="Preferences.cs" />
     <Compile Include="LicFile.cs" />
@@ -61,8 +60,8 @@
     <Compile Include="Utils.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="NamesWindow.resx">
-      <DependentUpon>NamesWindow.cs</DependentUpon>
+    <EmbeddedResource Include="ProductNamesWindow.resx">
+      <DependentUpon>ProductNamesWindow.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

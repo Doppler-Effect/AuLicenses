@@ -28,17 +28,20 @@ namespace LogViewer
 
         private void radioButtonWorkDays_MouseClick(object sender, MouseEventArgs e)
         {
-            makeStatesContainer(PREFERENCES.LogDirectoryPath);
+            this.statesContainer = new StatesContainer(PREFERENCES.Instance.LogDirectoryPath, this.ShowOnlyHolidays);
+            DrawProductList();
         }
 
         private void radioButtonHolidays_MouseClick(object sender, MouseEventArgs e)
         {
-            makeStatesContainer(PREFERENCES.LogDirectoryPath);
+            this.statesContainer = new StatesContainer(PREFERENCES.Instance.LogDirectoryPath, this.ShowOnlyHolidays);
+            DrawProductList();
         }
 
         private void buttonOpenToday_Click(object sender, EventArgs e)
         {
-            makeStatesContainer(PREFERENCES.DailyLogDirectoryPath);
+            this.statesContainer = new StatesContainer(PREFERENCES.Instance.DailyLogDirectoryPath, this.ShowOnlyHolidays);
+            DrawProductList();
         }
 
         private void buttonOpenDay_Click(object sender, EventArgs e)
@@ -47,28 +50,14 @@ namespace LogViewer
             dialog.CheckFileExists = true;
             dialog.Filter = String.Format("Daily log files (*{0})|*{0}", DailyState.FILEEXTENSION);
             dialog.Multiselect = true;
-            dialog.InitialDirectory = PREFERENCES.LogDirectoryPath;
+            dialog.InitialDirectory = PREFERENCES.Instance.LogDirectoryPath;
             if (dialog.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-                this.makeStatesContainer(dialog.FileNames);
+            {
+                this.statesContainer = new StatesContainer(dialog.FileNames, null);
+                DrawProductList();
+            }
         } 
-
-        private void productsListBox_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            drawChart(this.statesContainer.NormalizedStates);
-        }
-
-        void makeStatesContainer(string DirectoryPath)
-        {            
-            this.statesContainer = new StatesContainer(DirectoryPath, this.ShowOnlyHolidays);
-            DrawProductList();
-        }
-
-        void makeStatesContainer(string[] files)
-        {
-            this.statesContainer = new StatesContainer(files, null);
-            DrawProductList();
-        }
-
+                      
         void DrawProductList()
         {
             this.productsListBox.Items.Clear();
@@ -83,8 +72,12 @@ namespace LogViewer
                 }
             }
         }
+        private void productsListBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            drawProductsChart(this.statesContainer.NormalizedStates);
+        }  
         
-        void drawChart(List<State> statesList)
+        void drawProductsChart(List<State> statesList)
         {            
             mainChart.Series.Clear();
             foreach (string name in this.productsListBox.CheckedItems)
@@ -122,51 +115,8 @@ namespace LogViewer
             }
         }
 
-        private void mainChart_MouseClick(object sender, MouseEventArgs e)
-        {
-            HitTestResult pos = mainChart.HitTest(e.X, e.Y);
-            if (pos.ChartElementType == ChartElementType.DataPoint)
-            {
-                int pointIndex = pos.PointIndex;
-                Series series = pos.Series;
-                DataPoint point = series.Points[pointIndex];
-                Product P = point.Tag as Product;
-                if (P != null)
-                {     
-                    string Info = null;
-                    string Header = null;
-                    if (SeriesNormalized(series))
-                    {
-                        //Header = "Усреднённые данные";
-                        Info = String.Format("{0}: {1} из {2}", series.Name, P.currUsersNum, P.maxUsersNum);                        
-                    }
-                    else
-                    {
-                        Header = series.Name + "\n";
-                        Info = String.Format("Использовано {0} из {1} лицензий:\n\n", P.currUsersNum, P.maxUsersNum);
-                        foreach (User user in P.Users)
-                            Info += string.Format("{0}\n", user.Name);
-                    }
-                    Point location = e.Location;
-                    location.Offset(this.Location);
-                    location.Offset(this.mainChart.Location);
-                    InfoForm form = new InfoForm(Header, Info, location);
-                    form.Show(this);
-                }
-            }
-        }
-
-        private void buttonProductNames_Click(object sender, EventArgs e)
-        {
-            if(this.statesContainer != null)
-            {
-                NamesWindow win = new NamesWindow(this.statesContainer.States);
-                win.Show();
-            }
-        }
-                
         private bool SeriesNormalized(Series series)
-        {            
+        {
             foreach (DataPoint point in series.Points)
             {
                 if (point.Tag != null)
@@ -180,6 +130,57 @@ namespace LogViewer
                 }
             }
             return false;
+        }
+
+        private void mainChart_MouseClick(object sender, MouseEventArgs e)
+        {
+            HitTestResult pos = mainChart.HitTest(e.X, e.Y);
+            if (pos.ChartElementType == ChartElementType.DataPoint)
+            {
+                int pointIndex = pos.PointIndex;
+                Series series = pos.Series;
+                DataPoint point = series.Points[pointIndex];
+                Product P = point.Tag as Product;
+                if (P != null)
+                {     
+                    string Info = null;
+                    string Header = null;
+                    bool CloseButton = false;
+                    if (SeriesNormalized(series))
+                    {
+                        //Header = "Усреднённые данные";
+                        Info = String.Format("{0}: {1} из {2}", series.Name, P.currUsersNum, P.maxUsersNum);                        
+                    }
+                    else
+                    {
+                        Header = series.Name + "\n";
+                        Info = String.Format("Использовано {0} из {1} лицензий:\n\n", P.currUsersNum, P.maxUsersNum);
+                        CloseButton = true;
+                        foreach (User user in P.Users)
+                            Info += string.Format("{0}\n", user.Name);
+                    }
+                    Point location = e.Location;
+                    location.Offset(this.Location);
+                    location.Offset(this.mainChart.Location);
+                    InfoForm form = new InfoForm(Header, Info, location, CloseButton);
+                    form.Show(this);
+                }
+            }
+        }
+
+        private void buttonProductNames_Click(object sender, EventArgs e)
+        {
+            if(this.statesContainer != null)
+            {
+                ProductNamesWindow win = new ProductNamesWindow(this.statesContainer.States);
+                win.Show(this);
+            }
+        }
+        
+        private void buttonHolidaysSelect_Click(object sender, EventArgs e)
+        {
+            HolidaysSelector window = new HolidaysSelector();
+            window.Show(this);
         }
     }    
 }

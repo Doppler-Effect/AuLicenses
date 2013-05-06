@@ -137,5 +137,20 @@ namespace LogViewer
                 return this.normalized;
             }
         }
+
+        DateTime[] Dates
+        {
+            get
+            {
+                List<DateTime> result = new List<DateTime>();
+                foreach (State S in this.states)
+                {
+                    DateTime date = S.Datetime.Date;
+                    if (!result.Contains(date))
+                        result.Add(date);
+                }
+                return result.ToArray();
+            }
+        }
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace Core
 {
-    partial class NamesWindow
+    partial class ProductNamesWindow
     {
         /// <summary>
         /// Required designer variable.
@@ -62,14 +62,14 @@
             this.NAME.Name = "NAME";
             this.NAME.Width = 150;
             // 
-            // NamesWindow
+            // OptionsWindow
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(360, 491);
             this.Controls.Add(this.dataGridView1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
-            this.Name = "NamesWindow";
+            this.Name = "OptionsWindow";
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.Text = "Редактор названий (Enter = OK)";

@@ -62,6 +62,12 @@
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="StatesContainer.cs" />
+    <Compile Include="HolidaysSelector.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HolidaysSelector.Designer.cs">
+      <DependentUpon>HolidaysSelector.cs</DependentUpon>
+    </Compile>
     <EmbeddedResource Include="InfoForm.resx">
       <DependentUpon>InfoForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -78,6 +84,9 @@
       <DependentUpon>Resources.resx</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
+    <EmbeddedResource Include="HolidaysSelector.resx">
+      <DependentUpon>HolidaysSelector.cs</DependentUpon>
+    </EmbeddedResource>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>

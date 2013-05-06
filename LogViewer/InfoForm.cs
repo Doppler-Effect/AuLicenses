@@ -11,12 +11,13 @@ namespace LogViewer
 {
     public partial class InfoForm : Form
     {
-        public InfoForm(string Caption, string text, Point location)
+        public InfoForm(string Caption, string text, Point location, bool CloseButton = false)
         {
             InitializeComponent();
             this.Text = Caption;
             this.label.Text = text;
             this.Location = location;
+            this.ControlBox = CloseButton;
         }
 
         private void InfoForm_MouseLeave(object sender, EventArgs e)

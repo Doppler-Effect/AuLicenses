@@ -25,7 +25,7 @@ namespace AuLicMonitor
         public MainWindow()
         {
             InitializeComponent();
-            fileNames = new PREFERENCES();
+            fileNames = PREFERENCES.Instance;
             foreach (string s in fileNames.MonitorFilenames)
             {
                 bool fileExists = false;

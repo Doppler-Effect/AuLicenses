@@ -40,7 +40,7 @@ namespace Core
                
         public override string FilePath
         {
-            get { return Path.Combine(PREFERENCES.DailyLogDirectoryPath, this.datetime.ToString().ReplaceFilenameChars() + FILEEXTENSION); }
+            get { return Path.Combine(PREFERENCES.Instance.DailyLogDirectoryPath, this.datetime.ToString().ReplaceFilenameChars() + FILEEXTENSION); }
         }
 
         public int CompareTo(State state)

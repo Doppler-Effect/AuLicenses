@@ -16,8 +16,8 @@ namespace Core
         {
             get
             {
-                if (ProductNamesContainer.ProductNames.ContainsKey(this.id) && !String.IsNullOrEmpty(ProductNamesContainer.ProductNames[this.id]))
-                    return ProductNamesContainer.ProductNames[this.id];
+                if (PREFERENCES.Instance.ProductNames.ContainsKey(this.id) && !String.IsNullOrEmpty(PREFERENCES.Instance.ProductNames[this.id]))
+                    return PREFERENCES.Instance.ProductNames[this.id];
                 else
                     return this.id;
             }
@@ -50,9 +50,7 @@ namespace Core
 
         int maxusers;
         double mergedUserNum;
-        string id;
-
-        
+        string id;        
 
         List<User> users;
         public List<User> Users

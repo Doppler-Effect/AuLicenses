@@ -26,7 +26,7 @@ namespace Core
         {
             get
             {
-                if (this.date.DayOfWeek == DayOfWeek.Saturday || this.date.DayOfWeek == DayOfWeek.Sunday)
+                if (PREFERENCES.Instance.Holidays != null && PREFERENCES.Instance.Holidays.Contains<DateTime>(this.date.Date))
                     return true;
                 else
                     return false;
@@ -41,17 +41,17 @@ namespace Core
 
         public override string FilePath
         {
-            get { return Path.Combine(PREFERENCES.LogDirectoryPath, this.date.ToShortDateString() + FILEEXTENSION); }
+            get { return Path.Combine(PREFERENCES.Instance.LogDirectoryPath, this.date.ToShortDateString() + FILEEXTENSION); }
         }
 
         public DailyState()
         {
-            if (Directory.Exists(PREFERENCES.DailyLogDirectoryPath))
+            if (Directory.Exists(PREFERENCES.Instance.DailyLogDirectoryPath))
             {
                 this.date = DateTime.Now.Date;
                 this.states = new List<State>();
 
-                IEnumerable<string> files = Directory.EnumerateFiles(PREFERENCES.DailyLogDirectoryPath);
+                IEnumerable<string> files = Directory.EnumerateFiles(PREFERENCES.Instance.DailyLogDirectoryPath);
                 foreach (string f in files)
                 {
                     State S = (State)State.Load(f);
@@ -60,7 +60,7 @@ namespace Core
                 
                 this.Save(this.FilePath);
 
-                Directory.Delete(PREFERENCES.DailyLogDirectoryPath, true);
+                Directory.Delete(PREFERENCES.Instance.DailyLogDirectoryPath, true);
             }
         }        
     }    

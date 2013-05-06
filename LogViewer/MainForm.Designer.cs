@@ -39,6 +39,7 @@
             this.mainChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.productsListBox = new System.Windows.Forms.CheckedListBox();
             this.buttonProductNames = new System.Windows.Forms.Button();
+            this.buttonHolidaysSelect = new System.Windows.Forms.Button();
             this.groupBoxOpen.SuspendLayout();
             this.groupBoxNormalized.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.mainChart)).BeginInit();
@@ -152,12 +153,24 @@
             this.buttonProductNames.UseVisualStyleBackColor = true;
             this.buttonProductNames.Click += new System.EventHandler(this.buttonProductNames_Click);
             // 
+            // buttonHolidaysSelect
+            // 
+            this.buttonHolidaysSelect.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.buttonHolidaysSelect.Location = new System.Drawing.Point(12, 498);
+            this.buttonHolidaysSelect.Name = "buttonHolidaysSelect";
+            this.buttonHolidaysSelect.Size = new System.Drawing.Size(147, 23);
+            this.buttonHolidaysSelect.TabIndex = 8;
+            this.buttonHolidaysSelect.Text = "Выходные дни...";
+            this.buttonHolidaysSelect.UseVisualStyleBackColor = true;
+            this.buttonHolidaysSelect.Click += new System.EventHandler(this.buttonHolidaysSelect_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Window;
             this.ClientSize = new System.Drawing.Size(784, 562);
+            this.Controls.Add(this.buttonHolidaysSelect);
             this.Controls.Add(this.buttonProductNames);
             this.Controls.Add(this.productsListBox);
             this.Controls.Add(this.mainChart);
@@ -186,6 +199,7 @@
         private System.Windows.Forms.RadioButton radioButtonWorkDays;
         private System.Windows.Forms.GroupBox groupBoxNormalized;
         private System.Windows.Forms.Button buttonProductNames;
+        private System.Windows.Forms.Button buttonHolidaysSelect;
     }
 }
 

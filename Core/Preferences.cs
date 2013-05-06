@@ -11,12 +11,38 @@ namespace Core
     [Serializable()]
     public class PREFERENCES
     {
+        #region Singleton
+        private static PREFERENCES instance;
+        public static PREFERENCES Instance
+        {
+            get
+            {
+                if (instance == null)
+                {
+                    instance = new PREFERENCES();
+                }
+                return instance;
+            }
+        }
+        private PREFERENCES()
+        {
+            if (File.Exists(PREF_FILE_PATH))
+                Load();         
+            else
+            {
+                this.monitorFilenames = new List<string>();
+                this.holidays = new List<DateTime>();
+                this.productNames = new Dictionary<string, string>();
+            }
+        }
+        #endregion
+
         private string PREF_FILE_PATH
         {
             get { return Path.Combine(MainDirectoryPath, "IPN_LicUtilPref.bin"); }
         }
 
-        public static string MainDirectoryPath
+        public string MainDirectoryPath
         {
             get
             {
@@ -24,7 +50,7 @@ namespace Core
             }
         }
 
-        public static string LogDirectoryPath
+        public string LogDirectoryPath
         {
             get 
             {
@@ -32,25 +58,43 @@ namespace Core
             }
         }
 
-        public static string DailyLogDirectoryPath
+        public string DailyLogDirectoryPath
         {
             get
             {
                 return Path.Combine(LogDirectoryPath, "Daily");
             }
         }
-        
-        public PREFERENCES()
+
+        private List<DateTime> holidays;
+        public List<DateTime> Holidays
         {
-            if (File.Exists(PREF_FILE_PATH))
+            get
             {
-                PREFERENCES p = Load();
-                this.monitorFilenames = p.monitorFilenames;
+                return this.holidays;
             }
-            else
+            set
             {
-                this.monitorFilenames = new List<string>();
+                this.holidays = value;
+                this.Save();
             }
+        }
+
+        private Dictionary<string, string> productNames;
+        public Dictionary<string, string> ProductNames
+        {
+            get { return this.productNames; }
+        }        
+        public void UpdateProductNames(Dictionary<string, string> input)
+        {
+            foreach (KeyValuePair<string, string> pair in input)
+            {
+                if (productNames.ContainsKey(pair.Key))
+                    productNames[pair.Key] = pair.Value;
+                else
+                    productNames.Add(pair.Key, pair.Value);
+            }
+            Save();
         }
 
         List<string> monitorFilenames;
@@ -61,7 +105,6 @@ namespace Core
                 return this.monitorFilenames;
             }
         }
-
         public void AddMonitorFileName(string s)
         {
             if (!monitorFilenames.Contains(s))
@@ -70,7 +113,6 @@ namespace Core
                 Save();
             }
         }
-
         public void RemoveMonitorFileName(string s)
         {
             if (monitorFilenames.Contains(s))
@@ -89,14 +131,17 @@ namespace Core
             stream.Close();
         }
 
-        private PREFERENCES Load()
+        private void Load()
         {
-            PREFERENCES result;
+            PREFERENCES P;
             FileStream stream = File.OpenRead(PREF_FILE_PATH);
             BinaryFormatter deserializer = new BinaryFormatter();
-            result = (PREFERENCES)deserializer.Deserialize(stream);
+            P = (PREFERENCES)deserializer.Deserialize(stream);
             stream.Close();
-            return result;
+
+            this.monitorFilenames = P.monitorFilenames;
+            this.holidays = P.holidays;
+            this.productNames = P.productNames;
         }
     }
 }
