@@ -73,6 +73,7 @@
             this.ShowIcon = false;
             this.ShowInTaskbar = false;
             this.Text = "Редактор названий (Enter = OK)";
+            this.TopMost = true;
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
 
