@@ -30,6 +30,7 @@
         {
             System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
             System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             this.buttonOpenDay = new System.Windows.Forms.Button();
             this.buttonOpenToday = new System.Windows.Forms.Button();
             this.groupBoxOpen = new System.Windows.Forms.GroupBox();
@@ -37,9 +38,10 @@
             this.radioButtonHolidays = new System.Windows.Forms.RadioButton();
             this.radioButtonWorkDays = new System.Windows.Forms.RadioButton();
             this.mainChart = new System.Windows.Forms.DataVisualization.Charting.Chart();
-            this.productsListBox = new System.Windows.Forms.CheckedListBox();
             this.buttonProductNames = new System.Windows.Forms.Button();
             this.buttonHolidaysSelect = new System.Windows.Forms.Button();
+            this.listBox1 = new System.Windows.Forms.ListBox();
+            this.buttonUsers = new System.Windows.Forms.Button();
             this.groupBoxOpen.SuspendLayout();
             this.groupBoxNormalized.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.mainChart)).BeginInit();
@@ -47,8 +49,7 @@
             // 
             // buttonOpenDay
             // 
-            this.buttonOpenDay.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonOpenDay.Location = new System.Drawing.Point(6, 118);
+            this.buttonOpenDay.Location = new System.Drawing.Point(6, 121);
             this.buttonOpenDay.Name = "buttonOpenDay";
             this.buttonOpenDay.Size = new System.Drawing.Size(135, 23);
             this.buttonOpenDay.TabIndex = 3;
@@ -58,8 +59,7 @@
             // 
             // buttonOpenToday
             // 
-            this.buttonOpenToday.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.buttonOpenToday.Location = new System.Drawing.Point(6, 89);
+            this.buttonOpenToday.Location = new System.Drawing.Point(6, 92);
             this.buttonOpenToday.Name = "buttonOpenToday";
             this.buttonOpenToday.Size = new System.Drawing.Size(135, 23);
             this.buttonOpenToday.TabIndex = 2;
@@ -69,12 +69,13 @@
             // 
             // groupBoxOpen
             // 
+            this.groupBoxOpen.Controls.Add(this.buttonUsers);
             this.groupBoxOpen.Controls.Add(this.groupBoxNormalized);
             this.groupBoxOpen.Controls.Add(this.buttonOpenToday);
             this.groupBoxOpen.Controls.Add(this.buttonOpenDay);
             this.groupBoxOpen.Location = new System.Drawing.Point(12, 12);
             this.groupBoxOpen.Name = "groupBoxOpen";
-            this.groupBoxOpen.Size = new System.Drawing.Size(147, 146);
+            this.groupBoxOpen.Size = new System.Drawing.Size(147, 180);
             this.groupBoxOpen.TabIndex = 4;
             this.groupBoxOpen.TabStop = false;
             this.groupBoxOpen.Text = "Загрузить информацию";
@@ -130,18 +131,6 @@
             this.mainChart.Text = "chart1";
             this.mainChart.MouseClick += new System.Windows.Forms.MouseEventHandler(this.mainChart_MouseClick);
             // 
-            // productsListBox
-            // 
-            this.productsListBox.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.productsListBox.CheckOnClick = true;
-            this.productsListBox.FormattingEnabled = true;
-            this.productsListBox.Location = new System.Drawing.Point(12, 164);
-            this.productsListBox.Name = "productsListBox";
-            this.productsListBox.Size = new System.Drawing.Size(147, 257);
-            this.productsListBox.TabIndex = 6;
-            this.productsListBox.TabStop = false;
-            this.productsListBox.SelectedIndexChanged += new System.EventHandler(this.productsListBox_SelectedIndexChanged);
-            // 
             // buttonProductNames
             // 
             this.buttonProductNames.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
@@ -164,20 +153,43 @@
             this.buttonHolidaysSelect.UseVisualStyleBackColor = true;
             this.buttonHolidaysSelect.Click += new System.EventHandler(this.buttonHolidaysSelect_Click);
             // 
+            // listBox1
+            // 
+            this.listBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.listBox1.FormattingEnabled = true;
+            this.listBox1.Location = new System.Drawing.Point(12, 198);
+            this.listBox1.Name = "listBox1";
+            this.listBox1.SelectionMode = System.Windows.Forms.SelectionMode.MultiSimple;
+            this.listBox1.Size = new System.Drawing.Size(147, 290);
+            this.listBox1.Sorted = true;
+            this.listBox1.TabIndex = 9;
+            this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
+            // 
+            // buttonUsers
+            // 
+            this.buttonUsers.Location = new System.Drawing.Point(6, 150);
+            this.buttonUsers.Name = "buttonUsers";
+            this.buttonUsers.Size = new System.Drawing.Size(135, 23);
+            this.buttonUsers.TabIndex = 5;
+            this.buttonUsers.Text = "По пользователям";
+            this.buttonUsers.UseVisualStyleBackColor = true;
+            this.buttonUsers.Click += new System.EventHandler(this.buttonUsers_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Window;
             this.ClientSize = new System.Drawing.Size(784, 562);
+            this.Controls.Add(this.listBox1);
             this.Controls.Add(this.buttonHolidaysSelect);
             this.Controls.Add(this.buttonProductNames);
-            this.Controls.Add(this.productsListBox);
             this.Controls.Add(this.mainChart);
             this.Controls.Add(this.groupBoxOpen);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MinimumSize = new System.Drawing.Size(800, 600);
             this.Name = "MainForm";
-            this.ShowIcon = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Использование лицензий в ЗАО \"ИПН\"";
             this.groupBoxOpen.ResumeLayout(false);
@@ -194,12 +206,13 @@
         private System.Windows.Forms.Button buttonOpenToday;
         private System.Windows.Forms.GroupBox groupBoxOpen;
         private System.Windows.Forms.DataVisualization.Charting.Chart mainChart;
-        private System.Windows.Forms.CheckedListBox productsListBox;
         private System.Windows.Forms.RadioButton radioButtonHolidays;
         private System.Windows.Forms.RadioButton radioButtonWorkDays;
         private System.Windows.Forms.GroupBox groupBoxNormalized;
         private System.Windows.Forms.Button buttonProductNames;
         private System.Windows.Forms.Button buttonHolidaysSelect;
+        private System.Windows.Forms.ListBox listBox1;
+        private System.Windows.Forms.Button buttonUsers;
     }
 }
 

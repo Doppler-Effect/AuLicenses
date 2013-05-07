@@ -138,7 +138,32 @@ namespace LogViewer
             }
         }
 
-        DateTime[] Dates
+        List<User> users;
+        public List<User> Users
+        {
+            get 
+            {
+                if (users == null)
+                {
+                    List<User> result = new List<User>();
+                    foreach (State S in this.states)
+                    {
+                        foreach (Product P in S.Products)
+                        {
+                            foreach (User U in P.Users)
+                            {
+                                if (!result.Contains<User>(U))
+                                    result.Add(U);
+                            }
+                        }
+                    }
+                    users = result;
+                }
+                return users;
+            }
+        }
+        
+        public DateTime[] Dates
         {
             get
             {
@@ -151,6 +176,57 @@ namespace LogViewer
                 }
                 return result.ToArray();
             }
+        }
+
+        public Dictionary<Product, double> UserTimePerDay(User U, DateTime D/*, ref List<Product> products*/)
+        {
+            Dictionary<Product, double> result = new Dictionary<Product, double>();
+
+            List<State> dailyStates = new List<State>();
+            foreach (State S in this.states)
+            {
+                if (S.Datetime.Date == D.Date)
+                    dailyStates.Add(S);
+            }
+            dailyStates.Sort();
+
+            foreach (Product P in this.AllProducts)
+            {
+                for (int i = 0; i < dailyStates.Count - 1; i++)
+                {
+                    if (hasProductWithUser(dailyStates[i], P, U) && hasProductWithUser(dailyStates[i + 1], P, U))
+                    {
+                        int DeltaMinutes = new DateTime(Math.Abs(dailyStates[i].Datetime.Ticks - dailyStates[i + 1].Datetime.Ticks)).Minute;
+                        double DeltaHours = (double)DeltaMinutes / 60;
+
+                        if (result.ContainsKey(P))
+                        {
+                            result[P] += DeltaHours;
+                        }
+                        else
+                        {
+                            result.Add(P, DeltaHours);
+                        }
+                    }
+                }
+            }
+
+            return result;
+        }
+        private bool hasProductWithUser(State S, Product P, User U)
+        {
+            foreach (Product pr in S.Products)
+            {
+                if (pr.Equals(P))
+                {
+                    foreach (User usr in pr.Users)
+                    {
+                        if (usr.Equals(U))
+                            return true;
+                    }
+                }
+            }
+            return false;
         }
     }
 }
