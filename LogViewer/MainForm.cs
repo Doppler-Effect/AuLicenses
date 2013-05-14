@@ -20,7 +20,7 @@ namespace LogViewer
         {
             get { return this.radioButtonHolidays.Checked; }
         }
-
+        
         public MainForm()
         {
             InitializeComponent();
@@ -63,8 +63,7 @@ namespace LogViewer
             this.statesContainer = new StatesContainer(PREFERENCES.Instance.LogDirectoryPath, null);
             DrawProductList(true);
         }
-
-        enum ListBoxType { Users, Products };                      
+                     
         void DrawProductList(bool showUsers = false)
         {
             this.listBox1.Items.Clear();
@@ -75,15 +74,21 @@ namespace LogViewer
             {
                 if (showUsers)
                 {
-                    listBox1.Tag = ListBoxType.Users;
-                    foreach (User U in this.statesContainer.Users)
-                    {                        
-                        this.listBox1.Items.Add(U.Name);
+                    DateRangeForm rangeForm = new DateRangeForm(this.statesContainer.Dates);
+                    DialogResult result = rangeForm.ShowDialog(this);
+                    if (result == System.Windows.Forms.DialogResult.OK)
+                    {
+                        YearAndMonth range = rangeForm.Result;
+                        listBox1.Tag = range;
+                        foreach (User U in this.statesContainer.Users)
+                        {
+                            this.listBox1.Items.Add(U.Name);
+                        }
                     }
                 }
                 else
                 {
-                    listBox1.Tag = ListBoxType.Products;
+                    listBox1.Tag = null;
                     foreach (Product P in this.statesContainer.AllProducts)
                     {
                         this.listBox1.Items.Add(P.Name);
@@ -93,14 +98,18 @@ namespace LogViewer
         }
         private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if ((ListBoxType)listBox1.Tag == ListBoxType.Products)
+            if (listBox1.Tag == null)
                 drawProductsChart(this.statesContainer.NormalizedStates);
-            if ((ListBoxType)listBox1.Tag == ListBoxType.Users)
-                drawUsersChart(this.statesContainer.States);
+            else
+            {
+                YearAndMonth range = (YearAndMonth)listBox1.Tag;
+                drawUsersChart(this.statesContainer.States, range);
+            }
         }
 
-        void drawUsersChart(List<State> statesList)
-        {
+        void drawUsersChart(List<State> statesList, YearAndMonth Range)
+        {      
+            
             mainChart.Series.Clear();
             User CurrentUser = null;
             foreach (User U in this.statesContainer.Users)
@@ -111,7 +120,7 @@ namespace LogViewer
 
             if (CurrentUser != null)
             {
-                ChartArea area = mainChart.ChartAreas[0];                
+                ChartArea area = mainChart.ChartAreas[0];
                 area.AxisX.IntervalType = System.Windows.Forms.DataVisualization.Charting.DateTimeIntervalType.Days;
                 area.AxisX.Interval = 1;
                 area.AxisX.Title = "Дни";
@@ -120,33 +129,36 @@ namespace LogViewer
                 area.AxisY.Maximum = 12;
 
                 Dictionary<Product, Series> data = new Dictionary<Product, Series>();
-                                
+
                 foreach (DateTime date in this.statesContainer.Dates)
                 {
-                    Dictionary<Product, double> dailyData = this.statesContainer.UserTimePerDay(CurrentUser, date);
-
-                    foreach (Product P in dailyData.Keys)
+                    if (date.Year == Range.Date.Year && date.Month == Range.Date.Month)
                     {
-                        if (!data.ContainsKey(P))
-                        {
-                            Series series = new Series(P.Name);
-                            series.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Column;
-                            series.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Date;
-                            series.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Int32;
-                            series.LegendText = P.Name;
+                        Dictionary<Product, double> dailyData = this.statesContainer.UserTimePerDay(CurrentUser, date);
 
-                            data.Add(P, series);
+                        foreach (Product P in dailyData.Keys)
+                        {
+                            if (!data.ContainsKey(P))
+                            {
+                                Series series = new Series(P.Name);
+                                series.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Column;
+                                series.XValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Date;
+                                series.YValueType = System.Windows.Forms.DataVisualization.Charting.ChartValueType.Int32;
+                                series.LegendText = P.Name;
+
+                                data.Add(P, series);
+                            }
+                            DataPoint point = new DataPoint(data[P]);
+                            point.SetValueXY(date, dailyData[P]);
+                            point.Tag = date;
+                            data[P].Points.Add(point);
                         }
-                        DataPoint point = new DataPoint(data[P]);
-                        point.SetValueXY(date, dailyData[P]);
-                        point.Tag = date;
-                        data[P].Points.Add(point);
                     }
                 }
 
                 foreach (KeyValuePair<Product, Series> pair in data)
                 {
-                    mainChart.Series.Add(pair.Value);                    
+                    mainChart.Series.Add(pair.Value);
                 }
             }
         }
@@ -261,13 +273,13 @@ namespace LogViewer
             if(this.statesContainer != null)
             {
                 ProductNamesWindow win = new ProductNamesWindow(this.statesContainer.States);
-                win.Show(this);
+                win.ShowDialog(this);
             }
         }        
         private void buttonHolidaysSelect_Click(object sender, EventArgs e)
         {
             HolidaysSelector window = new HolidaysSelector();
-            window.Show(this);
+            window.ShowDialog(this);
         }        
     }    
 }

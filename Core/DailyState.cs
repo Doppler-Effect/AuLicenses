@@ -41,7 +41,25 @@ namespace Core
 
         public override string FilePath
         {
-            get { return Path.Combine(PREFERENCES.Instance.LogDirectoryPath, this.date.ToShortDateString() + FILEEXTENSION); }
+            get { return Path.Combine(PREFERENCES.Instance.LogDirectoryPath, this.reverseDateString + FILEEXTENSION); }
+        }
+
+        private string reverseDateString
+        {
+            get
+            {
+                StringBuilder s = new StringBuilder();
+                s.Append(this.date.Year);
+                s.Append('.');
+                string month = this.date.Month.ToString();
+                if (month.Length == 1)
+                    month = month.Insert(0, "0");
+                s.Append(month);
+                s.Append('.');
+                s.Append(this.date.Day);
+
+                return s.ToString();
+            }
         }
 
         public DailyState()

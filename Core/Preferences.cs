@@ -96,7 +96,7 @@ namespace Core
             }
             Save();
         }
-
+        
         List<string> monitorFilenames;
         public List<string> MonitorFilenames
         {

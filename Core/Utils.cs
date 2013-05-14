@@ -56,4 +56,39 @@ namespace Core
             return result;
         }
     }
+
+    public class YearAndMonth : IEquatable<YearAndMonth>
+    {
+        private readonly string[] months = { "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь", "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь" };
+        
+        private DateTime date;
+        public DateTime Date
+        {
+            get { return date; }
+        }
+
+        public int year
+        {
+            get { return this.date.Year; }
+        }
+        public string month
+        {
+            get { return this.months[this.date.Month - 1]; }
+        }
+
+        public YearAndMonth(DateTime d)
+        {
+            this.date = d;
+        }
+
+        public bool Equals(YearAndMonth X)
+        {
+            if (X == null)
+                return false;
+            if (X.year == this.year && X.month == this.month)
+                return true;
+            else
+                return false;
+        }  
+    }
 }

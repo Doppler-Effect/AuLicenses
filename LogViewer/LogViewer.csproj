@@ -85,6 +85,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DateRangeForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DateRangeForm.Designer.cs">
+      <DependentUpon>DateRangeForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="InfoForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -106,6 +112,9 @@
     <Compile Include="HolidaysSelector.Designer.cs">
       <DependentUpon>HolidaysSelector.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="DateRangeForm.resx">
+      <DependentUpon>DateRangeForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="InfoForm.resx">
       <DependentUpon>InfoForm.cs</DependentUpon>
     </EmbeddedResource>
