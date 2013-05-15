@@ -16,35 +16,29 @@ namespace LogViewer
     public partial class MainForm : Form
     {
         StatesContainer statesContainer;
-        bool ShowOnlyHolidays
-        {
-            get { return this.radioButtonHolidays.Checked; }
-        }
         
         public MainForm()
         {
             InitializeComponent();
+            this.toolStripStatusPath.Text = PREFERENCES.Instance.LogDirectoryPath;
         }
 
-        private void radioButtonWorkDays_MouseClick(object sender, MouseEventArgs e)
+        private void workDaysToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.statesContainer = new StatesContainer(PREFERENCES.Instance.LogDirectoryPath, this.ShowOnlyHolidays);
+            this.statesContainer = new StatesContainer(PREFERENCES.Instance.LogDirectoryPath);
             DrawProductList();
         }
-
-        private void radioButtonHolidays_MouseClick(object sender, MouseEventArgs e)
+        private void holidaysToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.statesContainer = new StatesContainer(PREFERENCES.Instance.LogDirectoryPath, this.ShowOnlyHolidays);
+            this.statesContainer = new StatesContainer(PREFERENCES.Instance.LogDirectoryPath, true);
             DrawProductList();
         }
-
-        private void buttonOpenToday_Click(object sender, EventArgs e)
+        private void todayToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            this.statesContainer = new StatesContainer(PREFERENCES.Instance.DailyLogDirectoryPath, this.ShowOnlyHolidays);
+            this.statesContainer = new StatesContainer(PREFERENCES.Instance.DailyLogDirectoryPath, null);
             DrawProductList();
-        }
-
-        private void buttonOpenDay_Click(object sender, EventArgs e)
+        }        
+        private void customDaysToolStripMenuItem_Click(object sender, EventArgs e)
         {
             OpenFileDialog dialog = new OpenFileDialog();
             dialog.CheckFileExists = true;
@@ -57,8 +51,7 @@ namespace LogViewer
                 DrawProductList();
             }
         }
-
-        private void buttonUsers_Click(object sender, EventArgs e)
+        private void usersToolStripMenuItem_Click(object sender, EventArgs e)
         {
             this.statesContainer = new StatesContainer(PREFERENCES.Instance.LogDirectoryPath, null);
             DrawProductList(true);
@@ -161,8 +154,7 @@ namespace LogViewer
                     mainChart.Series.Add(pair.Value);
                 }
             }
-        }
-        
+        }        
         void drawProductsChart(List<State> statesList)
         {            
             mainChart.Series.Clear();
@@ -268,18 +260,23 @@ namespace LogViewer
             }
         }
 
-        private void buttonProductNames_Click(object sender, EventArgs e)
+        private void setHolidaysToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            if(this.statesContainer != null)
+            HolidaysSelector window = new HolidaysSelector();
+            window.ShowDialog(this);
+        }
+        private void programNamesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (this.statesContainer != null)
             {
                 ProductNamesWindow win = new ProductNamesWindow(this.statesContainer.States);
                 win.ShowDialog(this);
             }
-        }        
-        private void buttonHolidaysSelect_Click(object sender, EventArgs e)
+        }
+        private void logPathToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            HolidaysSelector window = new HolidaysSelector();
-            window.ShowDialog(this);
-        }        
+            PREFERENCES.Instance.SetLogDirectoryPath();
+            this.toolStripStatusPath.Text = PREFERENCES.Instance.LogDirectoryPath;
+        }          
     }    
 }

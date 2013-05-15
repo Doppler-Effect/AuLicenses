@@ -18,6 +18,9 @@ namespace Core
         /// Отображает, был ли этот State слит с другим.
         /// </summary>
         private bool isMerged = false;
+        /// <summary>
+        /// True если состояние было объединено (слито, усреднено) с другим.
+        /// </summary>
         public bool IsMerged
         {
             get { return isMerged; }
@@ -88,6 +91,11 @@ namespace Core
             }
         }
 
+        /// <summary>
+        /// "Состояние" - объект, представляющий собой "снимок" лицензионного файла в момент времени.
+        /// </summary>
+        /// <param name="licfilepath">Путь к lic-файлу</param>
+        /// <param name="Save">Сохранять полученное состояние в виде файла?</param>
         public State(string licfilepath, bool Save = true)
         {
             if(File.Exists(licfilepath))
@@ -101,6 +109,9 @@ namespace Core
             }
         }        
 
+        /// <summary>
+        /// Метод "объединяет" два состояния, если разница между ними меньше 5 минут.
+        /// </summary>
         public void Merge(State newState)
         {
             int dHour = Math.Abs(this.Datetime.Hour - newState.Datetime.Hour);

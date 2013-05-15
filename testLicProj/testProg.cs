@@ -15,7 +15,8 @@ namespace testLicProj
             //    new State("\\\\venera\\autodesk_lic_status\\status_venera.txt");
             //    System.Threading.Thread.Sleep(1000);
             //}
-            new DailyState();
+            //new DailyState();
+            double foo = Math.Round(17.01 + 0.499, 0);
         }
     }
 }

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-
+using System.Windows.Forms;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
@@ -39,10 +39,10 @@ namespace Core
 
         private string PREF_FILE_PATH
         {
-            get { return Path.Combine(MainDirectoryPath, "IPN_LicUtilPref.bin"); }
+            get { return Path.Combine(MainPath, "IPN_LicUtilPref.bin"); }
         }
 
-        public string MainDirectoryPath
+        public string MainPath
         {
             get
             {
@@ -50,12 +50,45 @@ namespace Core
             }
         }
 
+        private string logDirectoryPath;
         public string LogDirectoryPath
         {
             get 
             {
-                return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "IPN License usage log");
+                if (this.logDirectoryPath != null && Directory.Exists(logDirectoryPath))
+                    return this.logDirectoryPath;
+
+                string result = PromptForDirectory();
+                if (result != null)
+                {
+                    this.logDirectoryPath = result;
+                    this.Save();
+                    return result;
+                }
+                else
+                    return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "IPN License usage log");
             }
+        }
+        public void SetLogDirectoryPath()
+        {
+            string path = this.PromptForDirectory();
+            if (!String.IsNullOrEmpty(path))
+            {
+                this.logDirectoryPath = path;
+                this.Save();
+            }
+        }
+        private string PromptForDirectory()
+        {
+            OpenFileDialog dialog = new OpenFileDialog();
+            dialog.CheckFileExists = false;
+            dialog.Filter = String.Format("Daily log files (*{0})|*{0}", DailyState.FILEEXTENSION);
+            dialog.Multiselect = false;
+
+            if (dialog.ShowDialog() == DialogResult.OK)
+                return Path.GetDirectoryName(dialog.FileName);
+            else
+                return null;
         }
 
         public string DailyLogDirectoryPath
@@ -142,6 +175,7 @@ namespace Core
             this.monitorFilenames = P.monitorFilenames;
             this.holidays = P.holidays;
             this.productNames = P.productNames;
+            this.logDirectoryPath = P.logDirectoryPath;
         }
     }
 }

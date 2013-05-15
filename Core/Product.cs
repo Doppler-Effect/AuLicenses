@@ -29,6 +29,9 @@ namespace Core
                 return this.maxusers;
             }
         }
+        /// <summary>
+        /// Возвращает текущее число пользователей продукта или число пользователей, получившееся после слияния продуктов.
+        /// </summary>
         public double currUsersNum
         {
             get
@@ -71,6 +74,9 @@ namespace Core
                 return false;
         }
 
+        /// <summary>
+        /// "Продукт" - содержит в себе информацию о пользователях.
+        /// </summary>
         public Product(ProductTextRow row, LicFile parentFile)
         //Users of 64300ACD_F:  (Total of 23 licenses issued;  Total of 19 licenses in use)
         {
@@ -80,6 +86,10 @@ namespace Core
             this.isNormalized = false;
         }
 
+        /// <summary>
+        /// Объединяет два продукта, находит среднее арифметическое от кол-в пользователей.
+        /// </summary>
+        /// <param name="newP"></param>
         public void Merge(Product newP)
         {
             if (newP != null)
@@ -90,5 +100,13 @@ namespace Core
             }
         }
 
+        /// <summary>
+        /// Округляет в большую сторону количество пользователей (1.0 -> 1.0; 1.1 -> 2.0;)
+        /// </summary>
+        public void UPRound()
+        {
+            if (this.isNormalized)
+                this.mergedUserNum = Math.Round(this.mergedUserNum + 0.499, 0);
+        }
     }
 }

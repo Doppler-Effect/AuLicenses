@@ -18,7 +18,12 @@ namespace LogViewer
         {
             get { return states; }
         }
-                
+            
+        /// <summary>
+        /// Контейнер с состояниями для последующей отрисовки графиков.
+        /// </summary>
+        /// <param name="DirectoryPath">Путь к папке с файлами состояний</param>
+        /// <param name="ShowHolidays">Показывать только выходные дни? (False = показывать только рабочие)</param>
         public StatesContainer(string DirectoryPath, bool? ShowHolidays = false)
         {
             if (Directory.Exists(DirectoryPath))
@@ -28,6 +33,11 @@ namespace LogViewer
             }
         }
 
+        /// <summary>
+        /// Контейнер с состояниями для последующей отрисовки графиков.
+        /// </summary>
+        /// <param name="filenames">Массив имён файлов-состояний</param>
+        /// <param name="ShowHolidays">Показывать только выходные дни? (False = показывать только рабочие)</param>
         public StatesContainer(IEnumerable<string> filenames, bool? ShowHolidays = false)
         {
             MakeStates(filenames, ShowHolidays);
@@ -89,6 +99,9 @@ namespace LogViewer
             }
         }
         
+        /// <summary>
+        /// Максимальное количество юзеров, встречающихся в состояниях данного объекта.
+        /// </summary>
         public int MaxUsersCount
         {
             get
@@ -107,6 +120,9 @@ namespace LogViewer
         }
 
         List<State> normalized;
+        /// <summary>
+        /// Массив усреднённых состояний - в рамках 5 минут производится усреднение показаний и последующее округление.
+        /// </summary>
         public List<State> NormalizedStates
         {
             get
@@ -132,6 +148,16 @@ namespace LogViewer
                         if (!S.IsMerged)
                             normalized.Add(S);
                     }
+
+                    //Округляем значение в большую сторону
+                    foreach (State S in normalized)
+                    {
+                        foreach (Product P in S.Products)
+                        {
+                            P.UPRound();
+                        }
+                    }
+
                     normalized.Sort(State.CompareByTime);
                 }
                 return this.normalized;
@@ -139,6 +165,9 @@ namespace LogViewer
         }
 
         List<User> users;
+        /// <summary>
+        /// Все пользователи, фигурирующие в наборе состояний данного объекта.
+        /// </summary>
         public List<User> Users
         {
             get 
@@ -163,6 +192,9 @@ namespace LogViewer
             }
         }
         
+        /// <summary>
+        /// Все даты, которые содержатся в данном объекте.
+        /// </summary>
         public DateTime[] Dates
         {
             get
@@ -178,7 +210,12 @@ namespace LogViewer
             }
         }
 
-        public Dictionary<Product, double> UserTimePerDay(User U, DateTime D/*, ref List<Product> products*/)
+        /// <summary>
+        /// Массив "Продукт-время работы в нём" для конкретного пользователя за конкретную дату.
+        /// </summary>
+        /// <param name="U">Пользователь</param>
+        /// <param name="D">дата</param>
+        public Dictionary<Product, double> UserTimePerDay(User U, DateTime D)
         {
             Dictionary<Product, double> result = new Dictionary<Product, double>();
 
