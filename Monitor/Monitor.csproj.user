@@ -1,14 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
-    <PublishUrlHistory>D:\Shared\IPN License Monitor\|D:\Shared\My Autodesk LM\|D:\Программы\My Autodesk LM\</PublishUrlHistory>
-    <InstallUrlHistory>\\tkachenko\Shared\My Autodesk LM\</InstallUrlHistory>
+    <ProjectView>ProjectFiles</ProjectView>
+    <PublishUrlHistory>\\cadserver\Distribs\IPN License Viewer\|D:\Shared\IPN LogViewer\|D:\Shared\|publish\</PublishUrlHistory>
+    <InstallUrlHistory>\\tkachenko\Shared\IPN LogViewer\|\\tkachenko\Shared|\\tkachenko\Shared\</InstallUrlHistory>
     <SupportUrlHistory />
-    <UpdateUrlHistory>\\tkachenko\Shared\My Autodesk LM\</UpdateUrlHistory>
+    <UpdateUrlHistory>\\tkachenko\Shared\IPN LogViewer\</UpdateUrlHistory>
     <BootstrapperUrlHistory />
     <ErrorReportUrlHistory />
     <FallbackCulture>en-US</FallbackCulture>
     <VerifyUploadedFiles>false</VerifyUploadedFiles>
-    <ProjectView>ProjectFiles</ProjectView>
   </PropertyGroup>
 </Project>
